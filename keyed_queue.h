@@ -5,7 +5,9 @@ template<class K, class V>
 class keyed_queue {
 private:
     using pairKV = std::pair<K, V>;
-    using list_of_itarator = list<std::list<pairKV>::iterator>;
+    using itKV = std::list<pairKV>::iterator;
+    using list_of_itarator = list<itKV>;
+
     std::list <pairKV> list_of_pairs;
     std::map <key, list_of_itarator> map_key_to_list_of_occurances;
 
@@ -36,15 +38,50 @@ public:
         if (list_of_pairs.isEmpty() == false) {
 
         }
+        pairKV p = list_of_pairs.front();
 
+        map_key_to_list_of_occurances[p.first].
+                erase(map_key_to_list_of_occurances[p.first].begin());
+
+        if (map_key_to_list_of_occurances[p.first].isEmpty()) {
+            map_key_to_list_of_occurances.remove(p.first);
+        }
     }
 
-    void pop(K const &) {
+    void pop(K const &k) {
+        if (map_key_to_list_of_occurances.contains(k) == false) {
 
+        }
+
+        itKV it = map_key_to_list_of_occurances[k].front();
+
+        list_of_pairs.erase(it);
+
+        map_key_to_list_of_occurances[k].
+                erase(map_key_to_list_of_occurances[k].begin());
+
+        if (map_key_to_list_of_occurances[k].isEmpty()) {
+            map_key_to_list_of_occurances.remove(k);
+        }
     }
 
     void move_to_back(K const &k) {
+        if (map_key_to_list_of_occurances.contains(k) == false) {
 
+        }
+
+        list_of_itarator l = map_key_to_list_of_occurances[k];
+        int number_of_elements_to_move = l.size();
+
+        for (int i = 0; i < number_of_elements_to_move; i++) {
+            itKV it = l.front();
+            list_of_pairs.push_back(*it);
+            list_of_pairs.erase(it);
+            l.pop_front();
+            l.push_back(list_of_pairs.end()--);
+        }
+
+        map_key_to_list_of_occurances[k] = l;
     }
 
     std::pair<K const &, V &> front() {
