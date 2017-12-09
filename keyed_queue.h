@@ -1,17 +1,31 @@
 #ifndef JNP_ZADANIE5_KEYED_QUEUE_H
 #define JNP_ZADANIE5_KEYED_QUEUE_H
 
+#include <stdlib.h>
+#include <utility>
+#include <list>
+#include <map>
+
 template<class K, class V>
 class keyed_queue {
 private:
     using pairKV = std::pair<K, V>;
-    using itKV = std::list<pairKV>::iterator;
-    using list_of_itarator = list<itKV>;
+    using itKV = typename std::list<pairKV>::iterator;
+    using list_of_itarator = std::list<itKV>;
 
     std::list <pairKV> list_of_pairs;
-    std::map <key, list_of_itarator> map_key_to_list_of_occurances;
-
+    std::map <K, list_of_itarator> map_key_to_list_of_occurances;
 public:
+    using k_iterator = typename std::list<pairKV>::iterator;
+
+    k_iterator k_begin(){
+        return list_of_pairs.begin();
+    }
+
+    k_iterator k_end(){
+        return list_of_pairs.end();//Chyba tak, ew --end()
+    }
+
     keyed_queue() {
 
     }
@@ -28,10 +42,10 @@ public:
         list_of_pairs.push_back(pairKV(k, v));//Nie powinniśmy kopiować?
 
         if (map_key_to_list_of_occurances.contains(k) == false) {
-            map_key_to_list_of_occurances.insert(k, list_of_iterators{});
+            map_key_to_list_of_occurances.insert(k, list_of_itarator{});
         }
 
-        map_key_to_list_of_occurances[key].push_back(list_of_pairs.end()--);
+        map_key_to_list_of_occurances[k].push_back(list_of_pairs.end()--);
     }
 
     void pop() {
