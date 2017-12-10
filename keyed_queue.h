@@ -41,15 +41,14 @@ public:
     void push(K const &k, V const &v) {
         list_of_pairs.push_back(pairKV(k, v));//Nie powinniśmy kopiować?
 
-        if (map_key_to_list_of_occurances.contains(k) == false) {
-            map_key_to_list_of_occurances.insert(k, list_of_itarator{});
-        }
+        if (map_key_to_list_of_occurances.find(k) == map_key_to_list_of_occurances.end())
+            map_key_to_list_of_occurances.insert(std::make_pair(k, list_of_itarator{}));
 
-        map_key_to_list_of_occurances[k].push_back(list_of_pairs.end()--);
+        map_key_to_list_of_occurances[k].push_back(--list_of_pairs.end());
     }
 
     void pop() {
-        if (list_of_pairs.isEmpty() == false) {
+        if (list_of_pairs.empty() == false) {
 
         }
         pairKV p = list_of_pairs.front();
@@ -57,13 +56,14 @@ public:
         map_key_to_list_of_occurances[p.first].
                 erase(map_key_to_list_of_occurances[p.first].begin());
 
-        if (map_key_to_list_of_occurances[p.first].isEmpty()) {
-            map_key_to_list_of_occurances.remove(p.first);
-        }
+        if (map_key_to_list_of_occurances[p.first].empty())
+            map_key_to_list_of_occurances.erase(p.first);
+
+        list_of_pairs.pop_front();
     }
 
     void pop(K const &k) {
-        if (map_key_to_list_of_occurances.contains(k) == false) {
+        if (map_key_to_list_of_occurances.find(k) == map_key_to_list_of_occurances.end()) {
 
         }
 
@@ -74,13 +74,12 @@ public:
         map_key_to_list_of_occurances[k].
                 erase(map_key_to_list_of_occurances[k].begin());
 
-        if (map_key_to_list_of_occurances[k].isEmpty()) {
-            map_key_to_list_of_occurances.remove(k);
-        }
+        if (map_key_to_list_of_occurances[k].empty())
+            map_key_to_list_of_occurances.erase(k);
     }
 
     void move_to_back(K const &k) {
-        if (map_key_to_list_of_occurances.contains(k) == false) {
+        if (map_key_to_list_of_occurances.find(k) == map_key_to_list_of_occurances.end()) {
 
         }
 
@@ -131,7 +130,7 @@ public:
     };
 
     size_t size() const {
-
+        return list_of_pairs.size();
     }
 
     bool empty() const {
@@ -143,7 +142,7 @@ public:
     }
 
     size_t count(K const &) const {
-
+    
     }
 
 //    - konstruktor bezparametrowy i kopiujący
