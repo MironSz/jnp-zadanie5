@@ -2,3 +2,4 @@
 - Dodać konstruktory w keyed_queue
 - Dorobić współdzielenie pamięci między kolejkami (pamiętać wtedy o zmianach w pop, push itd)
 - clear
+- trzeba dopisać destruktor
