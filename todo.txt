@@ -1,0 +1,3 @@
+- Dodać konstruktor bezparametrowy i kopiujący w k_iterator
+- Dodać konstruktory w keyed_queue
+- Dorobić współdzielenie pamięci między kolejkami
