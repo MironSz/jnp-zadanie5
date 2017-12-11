@@ -6,6 +6,13 @@
 #include <list>
 #include <map>
 
+class lookup_error : public std::exception {
+  virtual const char* what() const throw()
+  {
+    return "Lookup error";
+  }
+};
+
 template<class K, class V>
 class keyed_queue {
 private:
@@ -16,14 +23,14 @@ private:
     std::list <pairKV> list_of_pairs;
     std::map <K, list_of_itarator> map_key_to_list_of_occurances;
 public:
-    using k_iterator = typename std::list<pairKV>::iterator;
+    using k_iterator = typename std::map <K, list_of_itarator>::const_iterator;
 
     k_iterator k_begin(){
-        return list_of_pairs.begin();
+        return map_key_to_list_of_occurances.begin();
     }
 
     k_iterator k_end(){
-        return list_of_pairs.end();//Chyba tak, ew --end()
+        return map_key_to_list_of_occurances.end();//Chyba tak, ew --end()
     }
 
     keyed_queue() {
@@ -48,9 +55,8 @@ public:
     }
 
     void pop() {
-        if (list_of_pairs.empty() == false) {
-
-        }
+        if (empty())
+            throw lookup_error();
         pairKV p = list_of_pairs.front();
 
         map_key_to_list_of_occurances[p.first].
@@ -63,9 +69,8 @@ public:
     }
 
     void pop(K const &k) {
-        if (map_key_to_list_of_occurances.find(k) == map_key_to_list_of_occurances.end()) {
-
-        }
+        if (map_key_to_list_of_occurances.find(k) == map_key_to_list_of_occurances.end())
+            throw lookup_error();
 
         itKV it = map_key_to_list_of_occurances[k].front();
 
@@ -79,9 +84,8 @@ public:
     }
 
     void move_to_back(K const &k) {
-        if (map_key_to_list_of_occurances.find(k) == map_key_to_list_of_occurances.end()) {
-
-        }
+        if (map_key_to_list_of_occurances.find(k) == map_key_to_list_of_occurances.end())
+            throw lookup_error();
 
         list_of_itarator l = map_key_to_list_of_occurances[k];
         int number_of_elements_to_move = l.size();
@@ -134,15 +138,17 @@ public:
     }
 
     bool empty() const {
-
+        return size() == 0;
     }
 
     void clear() {
 
     }
 
-    size_t count(K const &) const {
-    
+    size_t count(K const &k) const {
+        if(map_key_to_list_of_occurances.find(k) == map_key_to_list_of_occurances.end())
+            throw lookup_error();
+        return map_key_to_list_of_occurances[k].size();
     }
 
 //    - konstruktor bezparametrowy i kopiujący
