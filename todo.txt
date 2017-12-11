@@ -1,3 +1,4 @@
 - Dodać konstruktor bezparametrowy i kopiujący w k_iterator
 - Dodać konstruktory w keyed_queue
-- Dorobić współdzielenie pamięci między kolejkami
+- Dorobić współdzielenie pamięci między kolejkami (pamiętać wtedy o zmianach w pop, push itd)
+- clear

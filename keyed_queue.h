@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <utility>
 #include <list>
+#include <set>
 #include <map>
 
 class lookup_error : public std::exception {
-  virtual const char* what() const throw()
-  {
+  virtual const char* what() const throw() {
     return "Lookup error";
   }
 };
@@ -16,12 +16,20 @@ class lookup_error : public std::exception {
 template<class K, class V>
 class keyed_queue {
 private:
-    using pairKV = std::pair<K, V>;
+    struct cmp{
+        bool operator() (K * k1, K * k2) {
+            return *k1 < *k2;
+        }
+    };
+
+    using pairKV = std::pair<K*, V>;
     using itKV = typename std::list<pairKV>::iterator;
     using list_of_itarator = std::list<itKV>;
 
+    std::set<K*, cmp> pointers;
+
     std::list <pairKV> list_of_pairs;
-    std::map <K, list_of_itarator> map_key_to_list_of_occurances;
+    std::map <K*, list_of_itarator> map_key_to_list_of_occurances;
 
     class k_iterator {
     private:
@@ -54,22 +62,27 @@ public:
     }
 
     k_iterator k_end(){
-        return k_iterator(map_key_to_list_of_occurances.end());//Chyba tak, ew --end()
+        return k_iterator(map_key_to_list_of_occurances.end());
     }
 
-    keyed_queue() {
-
-    }
+    keyed_queue() {}
 
     keyed_queue(keyed_queue const &old_queue) {
 
     }
 
-    keyed_queue(keyed_queue &&) {
-
-    }
+    keyed_queue(keyed_queue &&) = default;
 
     void push(K const &k, V const &v) {
+        const K * k_ptr = &k;
+        auto found = pointers.find(k_ptr);
+        if(found == pointers.end())
+            k_ptr = *found;
+        else {
+            k_ptr = new K(k);
+            pointers.insert(k_ptr);
+        }
+
         list_of_pairs.push_back(pairKV(k, v));//Nie powinniśmy kopiować?
 
         if (map_key_to_list_of_occurances.find(k) == map_key_to_list_of_occurances.end())
@@ -86,8 +99,14 @@ public:
         map_key_to_list_of_occurances[p.first].
                 erase(map_key_to_list_of_occurances[p.first].begin());
 
-        if (map_key_to_list_of_occurances[p.first].empty())
+        if (map_key_to_list_of_occurances[p.first].empty()) {
             map_key_to_list_of_occurances.erase(p.first);
+            K * k_ptr = &p.first;
+            auto found = pointers.find(k_ptr);
+            auto found_key = *found;
+            pointers.erase(found);
+            delete found_key;
+          }
 
         list_of_pairs.pop_front();
     }
@@ -206,7 +225,6 @@ public:
             throw lookup_error();
         return map_key_to_list_of_occurances[k].size();
     }
-
 };
 
 #endif //JNP_ZADANIE5_KEYED_QUEUE_H
