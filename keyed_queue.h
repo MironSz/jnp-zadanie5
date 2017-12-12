@@ -20,7 +20,7 @@ private:
     using itKV = typename std::list<pairKV>::iterator;
     using list_of_itarator = std::list<itKV>;
     using map_key_to_list_of_occurances  = std::map <std::shared_ptr<K>, list_of_itarator>;
-
+    bool shallow_copy_enable;
     std::shared_ptr<std::list<pairKV>>  list_of_pairs;
 
     std::shared_ptr<map_key_to_list_of_occurances> map_of_iterators;
