@@ -16,14 +16,30 @@ class lookup_error : public std::exception {
 template<class K, class V>
 class keyed_queue {
 private:
-    using pairKV = std::pair<const K *, V>;
+    using pairKV = std::pair<std::shared_ptr<K>, std::shared_ptr<V>>;
     using itKV = typename std::list<pairKV>::iterator;
     using list_of_itarator = std::list<itKV>;
-    using map_key_to_list_of_occurances  = std::map <K, list_of_itarator>;
+    using map_key_to_list_of_occurances  = std::map <std::shared_ptr<K>, list_of_itarator>;
 
-    std::list <pairKV> list_of_pairs;
+    std::shared_ptr<std::list<pairKV>>  list_of_pairs;
 
-    std::map <K, list_of_itarator> map_of_iterators;
+    std::shared_ptr<map_key_to_list_of_occurances> map_of_iterators;
+
+    void full_copy(){
+        auto new_list = new std::list<pairKV>(*list_of_pairs.get());
+
+        map_key_to_list_of_occurances new_map;
+
+        for(itKV it = new_list.begin();it != new_list.end();++it){
+            if(new_map.find(itKV->first) == new_map.end()){
+                new_map.insert(std::make_pair(it->first,list_of_itarator{}));
+            }
+            new_map[it->first].push_back(it);
+        }
+
+        list_of_pairs = std::make_shared<std::list<pairKV>>(new_list);
+        map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(new_map);
+    }
 
     class k_iterator {
     private:
