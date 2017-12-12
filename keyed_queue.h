@@ -109,7 +109,7 @@ public:
         auto map_ptr = map_of_iterators;
         auto list_ptr = list_of_pairs;
         bool was_unique = false;
-        if(map_of_iterators.unique() == false){
+        if(map_of_iterators.use_count() > 2){
             was_unique = true;
             keyed_queue<K,V> new_queue(*this);
             new_queue.full_copy();//TODO moze byc podwojna kopia
@@ -128,22 +128,22 @@ public:
         std::list<pairKV> singleton({std::make_pair(k_ptr,v_ptr)});//
 
         if (found == (map_ptr)->end()) {
-            std::cout<<"powinno byc true:";
+//            std::cout<<"powinno byc true:";
             auto ret = (map_ptr)->insert(std::make_pair(k_ptr, list_of_itarator{}));//JEdyna funnkcja ktora moze wywalic i modyfikuje
             if(ret.second == true){
-                std::cout<<"jest\n";
+//                std::cout<<"jest\n";
                 found = ret.first;
             } else{
                 //TODO
             }
         } else{
-            for(auto i:*list_of_pairs){
-                std::cout<<"("<<*i.first<<","<<*i.second<<") ";
-            }
-            std::cout<<"\n";
+//            for(auto i:*list_of_pairs){
+//                std::cout<<"("<<*i.first<<","<<*i.second<<") ";
+//            }
+//            std::cout<<"\n";
             //              dodawane key i val      znalezione key         znaleziony klucz iteratora       znaleziony val iterator
-                std::cout << k<<" "<<v<<" |  " << *found -> first << " "
-                          <<  *(found->second.front()->first)<<"  "<<*(found->second.front()->second) << "             koniec\n";
+//                std::cout << k<<" "<<v<<" |  " << *found -> first << " "
+//                          <<  *(found->second.front()->first)<<"  "<<*(found->second.front()->second) << "             koniec\n";
         }
 
         if(was_unique){
@@ -192,29 +192,29 @@ public:
         }
 
         itKV it = found->second.front();
-        std::cout << *it->first << " " << *it->second << "\n";
-        std::cout<<"++++++++++++++\n";
-        while(it!=list_of_pairs->end()) {
-            std::cout << *it->first <<"|"<<*it->second<<"\n";
-            ++it;
-        }
-        std::cout<<"++++++++++++++\n";
+//        std::cout << *it->first << " " << *it->second << "\n";
+//        std::cout<<"++++++++++++++\n";
+//        while(it!=list_of_pairs->end()) {
+//            std::cout << *it->first <<"|"<<*it->second<<"\n";
+//            ++it;
+//        }
+//        std::cout<<"++++++++++++++\n";
 
-        list_of_pairs->erase(++it);
+        list_of_pairs->erase(it);
 
-        for(auto elem : *list_of_pairs) {
-            std::cout << *elem.first <<"|"<<*elem.second<<"\n";
-        }
-        std::cout<<"++++++++++++++\n";
+//        for(auto elem : *list_of_pairs) {
+//            std::cout << *elem.first <<"|"<<*elem.second<<"\n";
+//        }
+//        std::cout<<"++++++++++++++\n";
 
 //        std::cout << found->
         found->second.erase(found->second.begin());
 
         if (found->second.empty()) {
-            std::cout <<"*\n";
+//            std::cout <<"*\n";
             map_of_iterators->erase(k_ptr);
         }
-        std::cout <<"*\n";
+//        std::cout <<"*\n";
     }
 
     void move_to_back(K const &k) {

@@ -11,24 +11,25 @@ int main() {
   kolejka.push(200, 2);
   kolejka.push(100, 2);
   cout << kolejka.first(200).first << " " << kolejka.first(200).second << "\n";
+//  kolejka.pop(200);
   kolejka.pop(200);
 //  kolejka.pop(2);
   cout <<" * z maina\n";
-  kolejka.push(14, 10);
+  kolejka.push(100, 3);
   //kolejka.pop();
   cout << kolejka.size() << "\n";
   for(auto b = kolejka.k_begin(); b != kolejka.k_end(); ++b)
     cout << *b << " | ";
   cout << "\n";
-  cout<<"kopiujemy\n";
-  auto kolejka2(kolejka);
-  kolejka.push(3,1);
-  for(auto b = kolejka2.k_begin(); b != kolejka2.k_end(); ++b)
-    cout << *b << " | ";
-  cout << "\n";
-  for(auto b = kolejka.k_begin(); b != kolejka.k_end(); ++b)
-    cout << *b << " | ";
-  cout << "\n";
+//  cout<<"kopiujemy\n";
+//  auto kolejka2(kolejka);
+//  kolejka.push(3,1);
+//  for(auto b = kolejka2.k_begin(); b != kolejka2.k_end(); ++b)
+//    cout << *b << " | ";
+//  cout << "\n";
+//  for(auto b = kolejka.k_begin(); b != kolejka.k_end(); ++b)
+//    cout << *b << " | ";
+//  cout << "\n";
   // //kolejka.front();
   // auto a = kolejka.front();
   // cout << a.first << " " << a.second << "\n";
