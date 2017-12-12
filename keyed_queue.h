@@ -117,33 +117,49 @@ public:
             list_ptr = new_queue.list_of_pairs;
         }
 
-        auto found = (map_ptr)->find(k_ptr);//
-
+        auto found = map_ptr->find(k_ptr);//
         std::shared_ptr<V> v_ptr = std::make_shared<V>(v);//
-        if(found == (map_ptr)->end()){//
-            k_ptr = std::make_shared<K>(k);//
-        } else{
+
+        if(found != map_ptr->end()){//
             k_ptr = found->first;
+            std::cout << "znal " << *k_ptr << " " << *(++found->second.front())->second << "\n";
         }
 
         std::list<pairKV> singleton({std::make_pair(k_ptr,v_ptr)});//
 
         if (found == (map_ptr)->end()) {
-            auto ret = (map_ptr)->insert(std::make_pair(k_ptr, list_of_itarator{}));//
+            std::cout<<"powinno byc true:";
+            auto ret = (map_ptr)->insert(std::make_pair(k_ptr, list_of_itarator{}));//JEdyna funnkcja ktora moze wywalic i modyfikuje
             if(ret.second == true){
-                found = ret.first;
+                std::cout<<"jest\n";
 
+                found = ret.first;
+                std::cout << *found -> first << " " << *(found->second.front()->second) << "koniec\n";
             } else{
                 //TODO
             }
         }
+
         if(was_unique){
             map_of_iterators = map_ptr;
             list_of_pairs = list_ptr;
         }
-        (list_of_pairs)->splice(list_of_pairs->end(),singleton);
 
-        (found->second).push_back(--(list_of_pairs->end()));
+        (list_of_pairs)->push_back({k_ptr, v_ptr});//splice(list_of_pairs->end(),singleton);
+//        (list_of_pairs)->splice(list_of_pairs->end(),singleton);
+        auto help=list_of_pairs->end();
+        --help;
+        (found->second).push_back(help);
+        std::cout << "Z tego klucza\n";
+        for(auto i : found->second) {
+            std::cout << *i->first << " " << *i->second << "**\n";
+            auto b = i;
+            ++b;
+            if(b != list_of_pairs->end()) {
+                std::cout<<"**\n";
+                std::cout << *b->first << " " << *b->second << "<-nastepny\n";
+            }
+        }
     }
 
     void pop() {
@@ -163,20 +179,36 @@ public:
     }
 
     void pop(K const &k) {
-        auto found = map_of_iterators.find(k);
-        if (found == map_of_iterators.end()) {
+        auto k_ptr = std::make_shared<K>(k);
+        auto found = map_of_iterators->find(k_ptr);//
+        if (found == map_of_iterators->end()) {
             throw lookup_error();
         }
 
         itKV it = found->second.front();
+        std::cout << *it->first << " " << *it->second << "\n";
+        std::cout<<"++++++++++++++\n";
+        while(it!=list_of_pairs->end()) {
+            std::cout << *it->first <<"|"<<*it->second<<"\n";
+            ++it;
+        }
+        std::cout<<"++++++++++++++\n";
 
-        list_of_pairs.erase(it);
+        list_of_pairs->erase(++it);
 
+        for(auto elem : *list_of_pairs) {
+            std::cout << *elem.first <<"|"<<*elem.second<<"\n";
+        }
+        std::cout<<"++++++++++++++\n";
+
+//        std::cout << found->
         found->second.erase(found->second.begin());
 
         if (found->second.empty()) {
-            map_of_iterators.erase(k);
+            std::cout <<"*\n";
+            map_of_iterators->erase(k_ptr);
         }
+        std::cout <<"*\n";
     }
 
     void move_to_back(K const &k) {
@@ -236,38 +268,38 @@ public:
     };
 
     std::pair<K const &, V &> first(K const &key) {
-        auto found = map_of_iterators.find(key);
-        if (found == map_of_iterators.end()) {
+        auto found = map_of_iterators->find(std::make_shared<K>(key));
+        if (found == map_of_iterators->end()) {
             throw lookup_error();
         }
-        V &val = found->second.front()->second;
+        V &val = *found->second.front()->second;
         return {key, val};
     };
 
     std::pair<K const &, V &> last(K const &key) {
-        auto found = map_of_iterators.find(key);
+        auto found = map_of_iterators->find(std::make_shared<K>(key));
         if (found == map_of_iterators.end()) {
             throw lookup_error();
         }
-        V &val = found->second.back()->second;
+        V &val = *found->second.back()->second;
         return {key, val};
     };
 
     std::pair<K const &, V const &> first(K const &key) const {
-        auto found = map_of_iterators.find(key);
+        auto found = map_of_iterators->find(std::make_shared<K>(key));
         if (found == map_of_iterators.end()) {
             throw lookup_error();
         }
-        V const &val = found->second.front()->second;
+        V const &val = *found->second.front()->second;
         return {key, val};
     };
 
     std::pair<K const &, V const &> last(K const &key) const {
-        auto found = map_of_iterators.find(key);
+        auto found = map_of_iterators->find(std::make_shared<K>(key));
         if (found == map_of_iterators.end()) {
             throw lookup_error();
         }
-        V const &val = found->second.back()->second;
+        V const &val = *found->second.back()->second;
         return {key, val};
     };
 
