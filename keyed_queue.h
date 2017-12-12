@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <utility>
 #include <list>
+#include <memory>
 #include <set>
 #include <map>
 
@@ -31,7 +32,7 @@ private:
         map_key_to_list_of_occurances new_map;
 
         for(itKV it = new_list.begin();it != new_list.end();++it){
-            if(new_map.find(itKV->first) == new_map.end()){
+            if(new_map.find(it->first) == new_map.end()){
                 new_map.insert(std::make_pair(it->first,list_of_itarator{}));
             }
             new_map[it->first].push_back(it);
@@ -76,7 +77,7 @@ public:
     }
 
     keyed_queue() {
-
+        
     }
 
     keyed_queue(keyed_queue const &old_queue) {
@@ -224,7 +225,7 @@ public:
     };
 
     size_t size() const {
-        return list_of_pairs.size();
+        return list_of_pairs.get();
     }
 
     bool empty() const {

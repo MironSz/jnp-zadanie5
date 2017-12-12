@@ -11,7 +11,7 @@ int main() {
   kolejka.push(14, 6);
   //kolejka.pop(2);
   kolejka.push(14, 10);
-  kolejka.pop();
+  //kolejka.pop();
   kolejka.push(2, 1);
   cout << kolejka.size() << "\n";
   for(auto b = kolejka.k_begin(); b != kolejka.k_end(); ++b)
