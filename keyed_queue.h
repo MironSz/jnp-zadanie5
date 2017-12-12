@@ -17,17 +17,25 @@ class lookup_error : public std::exception {
 template<class K, class V>
 class keyed_queue {
 private:
+
+    struct cmp {
+        bool operator() (std::shared_ptr<K> k1, std::shared_ptr<K> k2) {
+            return *k1.get() < *k2.get();
+        }
+    };
+
     using pairKV = std::pair<std::shared_ptr<K>, std::shared_ptr<V>>;
     using itKV = typename std::list<pairKV>::iterator;
     using list_of_itarator = std::list<itKV>;
-    using map_key_to_list_of_occurances  = std::map <std::shared_ptr<K>, list_of_itarator>;
+    using map_key_to_list_of_occurances  = std::map <std::shared_ptr<K>, list_of_itarator, cmp>;
     bool shallow_copy_enable;
     std::shared_ptr<std::list<pairKV>>  list_of_pairs;
 
     std::shared_ptr<map_key_to_list_of_occurances> map_of_iterators;
 
     void full_copy(){
-        auto new_list = new std::list<pairKV>(*list_of_pairs.get());
+
+        auto new_list = std::list<pairKV>(*list_of_pairs.get());
 
         map_key_to_list_of_occurances new_map;
 
@@ -69,11 +77,11 @@ private:
 
 public:
     k_iterator k_begin() {
-        return k_iterator(map_of_iterators.begin());
+        return k_iterator(map_of_iterators->begin());
     }
 
     k_iterator k_end() {
-        return k_iterator(map_of_iterators.end());
+        return k_iterator(map_of_iterators->end());
     }
 
     keyed_queue() {
@@ -96,20 +104,32 @@ public:
     keyed_queue(keyed_queue &&) = default;
 
     void push(K const &k, V const &v) {
-        auto found = map_of_iterators.find(k);
+        std::shared_ptr<K> k_ptr = std::make_shared<K>(k);//
 
-        std::shared_ptr<V> v_ptr = std::make_shared<V>(v);
-        std::shared_ptr<K> k_ptr;
-        if(found == map_of_iterators.end()){
-            k_ptr = std::make_shared<K>(k);
+        auto map_ptr = map_of_iterators;
+        auto list_ptr = list_of_pairs;
+        bool was_unique = false;
+        if(map_of_iterators.unique() == false){
+            was_unique = true;
+            keyed_queue<K,V> new_queue(*this);
+            new_queue.full_copy();//TODO moze byc podwojna kopia
+            map_ptr = new_queue.map_of_iterators;
+            list_ptr = new_queue.list_of_pairs;
+        }
+
+        auto found = (map_ptr)->find(k_ptr);//
+
+        std::shared_ptr<V> v_ptr = std::make_shared<V>(v);//
+        if(found == (map_ptr)->end()){//
+            k_ptr = std::make_shared<K>(k);//
         } else{
             k_ptr = found->first;
         }
 
-        std::list<pairKV> singleton({k_ptr,v_ptr});
+        std::list<pairKV> singleton({std::make_pair(k_ptr,v_ptr)});//
 
-        if (found == map_of_iterators.end()) {
-            auto ret = map_of_iterators.insert(std::make_pair(k_ptr, list_of_itarator{}));
+        if (found == (map_ptr)->end()) {
+            auto ret = (map_ptr)->insert(std::make_pair(k_ptr, list_of_itarator{}));//
             if(ret.second == true){
                 found = ret.first;
 
@@ -117,10 +137,13 @@ public:
                 //TODO
             }
         }
+        if(was_unique){
+            map_of_iterators = map_ptr;
+            list_of_pairs = list_ptr;
+        }
+        (list_of_pairs)->splice(list_of_pairs->end(),singleton);
 
-        list_of_pairs.splice(list_of_pairs.end(),singleton);
-
-        found->second.push_back(--list_of_pairs.end());
+        (found->second).push_back(--(list_of_pairs->end()));
     }
 
     void pop() {
@@ -249,7 +272,7 @@ public:
     };
 
     size_t size() const {
-        return list_of_pairs.get();
+        return list_of_pairs.get()->size();
     }
 
     bool empty() const {

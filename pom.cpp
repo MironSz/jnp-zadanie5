@@ -17,6 +17,15 @@ int main() {
   for(auto b = kolejka.k_begin(); b != kolejka.k_end(); ++b)
     cout << *b << " | ";
   cout << "\n";
+  cout<<"kopiujemy\n";
+  auto kolejka2(kolejka);
+  kolejka.push(3,1);
+  for(auto b = kolejka2.k_begin(); b != kolejka2.k_end(); ++b)
+    cout << *b << " | ";
+  cout << "\n";
+  for(auto b = kolejka.k_begin(); b != kolejka.k_end(); ++b)
+    cout << *b << " | ";
+  cout << "\n";
   // //kolejka.front();
   // auto a = kolejka.front();
   // cout << a.first << " " << a.second << "\n";
