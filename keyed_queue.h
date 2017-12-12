@@ -63,7 +63,7 @@ private:
         }
 
         K operator*() {
-            return i->first;
+            return *(i->first.get());
         }
     };
 
@@ -77,11 +77,20 @@ public:
     }
 
     keyed_queue() {
-        
+        list_of_pairs = std::make_shared<std::list<pairKV>>(std::list<pairKV>{});
+        map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(map_key_to_list_of_occurances{});
+        shallow_copy_enable = true;
+        //TODO licznik
     }
 
     keyed_queue(keyed_queue const &old_queue) {
-
+        list_of_pairs = old_queue.list_of_pairs;
+        map_of_iterators = old_queue.map_of_iterators;
+        //TODO licznik
+        if(shallow_copy_enable == false){
+            full_copy();
+        }
+        shallow_copy_enable = true;
     }
 
     keyed_queue(keyed_queue &&) = default;
@@ -89,12 +98,27 @@ public:
     void push(K const &k, V const &v) {
         auto found = map_of_iterators.find(k);
 
-        if (found == map_of_iterators.end()) {
-            map_of_iterators.insert(std::make_pair(k, list_of_itarator{}));
-            found = map_of_iterators.find(k);
+        std::shared_ptr<V> v_ptr = std::make_shared<V>(v);
+        std::shared_ptr<K> k_ptr;
+        if(found == map_of_iterators.end()){
+            k_ptr = std::make_shared<K>(k);
+        } else{
+            k_ptr = found->first;
         }
 
-        list_of_pairs.push_back(pairKV(&(found->first), v));
+        std::list<pairKV> singleton({k_ptr,v_ptr});
+
+        if (found == map_of_iterators.end()) {
+            auto ret = map_of_iterators.insert(std::make_pair(k_ptr, list_of_itarator{}));
+            if(ret.second == true){
+                found = ret.first;
+
+            } else{
+                //TODO
+            }
+        }
+
+        list_of_pairs.splice(list_of_pairs.end(),singleton);
 
         found->second.push_back(--list_of_pairs.end());
     }
