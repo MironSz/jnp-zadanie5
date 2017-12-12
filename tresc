@@ -134,9 +134,9 @@ i przez operacje na jej składowych, a obserwowalny stan obiektów
 nie powinien się zmienić. W szczególności operacje modyfikacji zakończone
 niepowodzeniem nie powinny unieważniać iteratorów.
 
-===============
-Przykład użycia
-===============
+|===============|
+|Przykład użycia|
+|===============|
 
 #include "keyed_queue.h"
 #include <cassert>
