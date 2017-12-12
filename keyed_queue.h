@@ -16,27 +16,21 @@ class lookup_error : public std::exception {
 template<class K, class V>
 class keyed_queue {
 private:
-    struct cmp {
-        bool operator()(K *k1, K *k2) {
-            return *k1 < *k2;
-        }
-    };
-
-    using pairKV = std::pair<K *, V>;
+    using pairKV = std::pair<const K *, V>;
     using itKV = typename std::list<pairKV>::iterator;
     using list_of_itarator = std::list<itKV>;
-
-//    std::set<K *, cmp> pointers;
+    using map_key_to_list_of_occurances  = std::map <K, list_of_itarator>;
 
     std::list <pairKV> list_of_pairs;
-    std::map<K, list_of_itarator,cmp> map_key_to_list_of_occurances;
+
+    std::map <K, list_of_itarator> map_of_iterators;
 
     class k_iterator {
     private:
-        typename std::map<K, list_of_itarator,cmp>::const_iterator i;
+        typename map_key_to_list_of_occurances ::const_iterator i;
 
     public:
-        k_iterator(typename std::map<K, list_of_itarator,cmp>::const_iterator it) : i(it) {};
+        k_iterator(typename map_key_to_list_of_occurances::const_iterator it) : i(it) {};
 
         k_iterator &operator++() {
             ++i;
@@ -58,11 +52,11 @@ private:
 
 public:
     k_iterator k_begin() {
-        return k_iterator(map_key_to_list_of_occurances.begin());
+        return k_iterator(map_of_iterators.begin());
     }
 
     k_iterator k_end() {
-        return k_iterator(map_key_to_list_of_occurances.end());
+        return k_iterator(map_of_iterators.end());
     }
 
     keyed_queue() {
@@ -76,16 +70,14 @@ public:
     keyed_queue(keyed_queue &&) = default;
 
     void push(K const &k, V const &v) {
-//        auto k_ptr = map_key_to_list_of_occurances.find(k);
+        auto found = map_of_iterators.find(k);
 
-        auto found =map_key_to_list_of_occurances.find(k);
-        if (found == map_key_to_list_of_occurances.end()) {
-            map_key_to_list_of_occurances.insert(std::make_pair(k, list_of_itarator{}));
-            found = map_key_to_list_of_occurances.find(k);
+        if (found == map_of_iterators.end()) {
+            map_of_iterators.insert(std::make_pair(k, list_of_itarator{}));
+            found = map_of_iterators.find(k);
         }
 
-
-        list_of_pairs.push_back(pairKV(&(found->first), v));//Nie powinniśmy kopiować?
+        list_of_pairs.push_back(pairKV(&(found->first), v));
 
         found->second.push_back(--list_of_pairs.end());
     }
@@ -96,19 +88,19 @@ public:
         }
         pairKV p = list_of_pairs.front();
 
-        map_key_to_list_of_occurances[*(p.first)].
-                erase(map_key_to_list_of_occurances[*(p.first)].begin());
+        map_of_iterators[*(p.first)].
+                erase(map_of_iterators[*(p.first)].begin());
 
         list_of_pairs.pop_front();
 
-        if (map_key_to_list_of_occurances[*(p.first)].empty()) {
-            map_key_to_list_of_occurances.erase(*(p.first));
+        if (map_of_iterators[*(p.first)].empty()) {
+            map_of_iterators.erase(*(p.first));
         }
     }
 
     void pop(K const &k) {
-        auto found = map_key_to_list_of_occurances.find(k);
-        if (found == map_key_to_list_of_occurances.end()) {
+        auto found = map_of_iterators.find(k);
+        if (found == map_of_iterators.end()) {
             throw lookup_error();
         }
 
@@ -119,13 +111,13 @@ public:
         found->second.erase(found->second.begin());
 
         if (found->second.empty()) {
-            map_key_to_list_of_occurances.erase(k);
+            map_of_iterators.erase(k);
         }
     }
 
     void move_to_back(K const &k) {
-        auto found = map_key_to_list_of_occurances.find(k);
-        if (found == map_key_to_list_of_occurances.end()) {
+        auto found = map_of_iterators.find(k);
+        if (found == map_of_iterators.end()) {
             throw lookup_error();
         }
 
@@ -180,8 +172,8 @@ public:
     };
 
     std::pair<K const &, V &> first(K const &key) {
-        auto found = map_key_to_list_of_occurances.find(key);
-        if (found == map_key_to_list_of_occurances.end()) {
+        auto found = map_of_iterators.find(key);
+        if (found == map_of_iterators.end()) {
             throw lookup_error();
         }
         V &val = found->second.front()->second;
@@ -189,8 +181,8 @@ public:
     };
 
     std::pair<K const &, V &> last(K const &key) {
-        auto found = map_key_to_list_of_occurances.find(key);
-        if (found == map_key_to_list_of_occurances.end()) {
+        auto found = map_of_iterators.find(key);
+        if (found == map_of_iterators.end()) {
             throw lookup_error();
         }
         V &val = found->second.back()->second;
@@ -198,8 +190,8 @@ public:
     };
 
     std::pair<K const &, V const &> first(K const &key) const {
-        auto found = map_key_to_list_of_occurances.find(key);
-        if (found == map_key_to_list_of_occurances.end()) {
+        auto found = map_of_iterators.find(key);
+        if (found == map_of_iterators.end()) {
             throw lookup_error();
         }
         V const &val = found->second.front()->second;
@@ -207,8 +199,8 @@ public:
     };
 
     std::pair<K const &, V const &> last(K const &key) const {
-        auto found = map_key_to_list_of_occurances.find(key);
-        if (found == map_key_to_list_of_occurances.end()) {
+        auto found = map_of_iterators.find(key);
+        if (found == map_of_iterators.end()) {
             throw lookup_error();
         }
         V const &val = found->second.back()->second;
@@ -228,10 +220,10 @@ public:
     }
 
     size_t count(K const &k) const {
-        if (map_key_to_list_of_occurances.find(k) == map_key_to_list_of_occurances.end()) {
+        if (map_of_iterators.find(k) == map_of_iterators.end()) {
             throw lookup_error();
         }
-        return map_key_to_list_of_occurances[k].size();
+        return map_of_iterators[k].size();
     }
 };
 

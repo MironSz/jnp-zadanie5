@@ -14,9 +14,9 @@ int main() {
   kolejka.pop();
   kolejka.push(2, 1);
   cout << kolejka.size() << "\n";
-//  for(auto b = kolejka.k_begin(); b != kolejka.k_end(); ++b)
-//    cout << *b << " | ";
-//  cout << "\n";
+  for(auto b = kolejka.k_begin(); b != kolejka.k_end(); ++b)
+    cout << *b << " | ";
+  cout << "\n";
   // //kolejka.front();
   // auto a = kolejka.front();
   // cout << a.first << " " << a.second << "\n";
