@@ -1,0 +1,423 @@
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:22:31: error: ‘std::shared_ptr’ has not been declared
+         bool operator() (std::shared_ptr<K> k1, std::shared_ptr<K> k2) {
+                               ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:22:41: error: expected ‘,’ or ‘...’ before ‘<’ token
+         bool operator() (std::shared_ptr<K> k1, std::shared_ptr<K> k2) {
+                                         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:27:11: error: expected nested-name-specifier before ‘pairKV’
+     using pairKV = std::pair<std::shared_ptr<K>, std::shared_ptr<V>>;
+           ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:28:11: error: expected nested-name-specifier before ‘itKV’
+     using itKV = typename std::list<pairKV>::iterator;
+           ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:29:11: error: expected nested-name-specifier before ‘list_of_itarator’
+     using list_of_itarator = std::list<itKV>;
+           ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:30:11: error: expected nested-name-specifier before ‘map_key_to_list_of_occurances’
+     using map_key_to_list_of_occurances  = std::map <std::shared_ptr<K>, list_of_itarator, cmp>;
+           ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:32:10: error: ‘shared_ptr’ in namespace ‘std’ does not name a template type
+     std::shared_ptr<std::list<pairKV>>  list_of_pairs;
+          ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:34:10: error: ‘shared_ptr’ in namespace ‘std’ does not name a template type
+     std::shared_ptr<map_key_to_list_of_occurances> map_of_iterators;
+          ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:55:18: error: ‘map_key_to_list_of_occurances’ has not been declared
+         typename map_key_to_list_of_occurances ::const_iterator i;
+                  ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:58:29: error: ‘map_key_to_list_of_occurances’ has not been declared
+         k_iterator(typename map_key_to_list_of_occurances::const_iterator it) : i(it) {};
+                             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:104:29: error: expected ‘,’ or ‘...’ before ‘&&’ token
+     keyed_queue(keyed_queue &&) = default;
+                             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:104:35: warning: defaulted and deleted functions only available with -std=c++11 or -std=gnu++11
+     keyed_queue(keyed_queue &&) = default;
+                                   ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:104:35: error: invalid constructor; you probably meant ‘keyed_queue<K, V> (const keyed_queue<K, V>&)’
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘bool keyed_queue<K, V>::cmp::operator()(int)’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:23:21: error: ‘k1’ was not declared in this scope
+             return *k1.get() < *k2.get();
+                     ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:23:33: error: ‘k2’ was not declared in this scope
+             return *k1.get() < *k2.get();
+                                 ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘void keyed_queue<K, V>::full_copy()’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:38:14: error: ‘new_list’ does not name a type
+         auto new_list = std::list<pairKV>(*list_of_pairs.get());
+              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:40:9: error: ‘map_key_to_list_of_occurances’ was not declared in this scope
+         map_key_to_list_of_occurances new_map;
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:42:13: error: ‘itKV’ was not declared in this scope
+         for(itKV it = new_list.begin();it != new_list.end();++it){
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:42:40: error: ‘it’ was not declared in this scope
+         for(itKV it = new_list.begin();it != new_list.end();++it){
+                                        ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:42:46: error: ‘new_list’ was not declared in this scope
+         for(itKV it = new_list.begin();it != new_list.end();++it){
+                                              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:43:16: error: ‘new_map’ was not declared in this scope
+             if(new_map.find(it->first) == new_map.end()){
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:44:57: error: ‘list_of_itarator’ was not declared in this scope
+                 new_map.insert(std::make_pair(it->first,list_of_itarator{}));
+                                                         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:46:13: error: ‘new_map’ was not declared in this scope
+             new_map[it->first].push_back(it);
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:49:9: error: ‘list_of_pairs’ was not declared in this scope
+         list_of_pairs = std::make_shared<std::list<pairKV>>(new_list);
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:49:25: error: ‘make_shared’ is not a member of ‘std’
+         list_of_pairs = std::make_shared<std::list<pairKV>>(new_list);
+                         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:49:52: error: ‘pairKV’ was not declared in this scope
+         list_of_pairs = std::make_shared<std::list<pairKV>>(new_list);
+                                                    ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:49:61: error: ‘new_list’ was not declared in this scope
+         list_of_pairs = std::make_shared<std::list<pairKV>>(new_list);
+                                                             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:49:69: error: template argument 1 is invalid
+         list_of_pairs = std::make_shared<std::list<pairKV>>(new_list);
+                                                                     ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:49:69: error: template argument 2 is invalid
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:50:9: error: ‘map_of_iterators’ was not declared in this scope
+         map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(new_map);
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:50:28: error: ‘make_shared’ is not a member of ‘std’
+         map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(new_map);
+                            ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:50:76: error: ‘new_map’ was not declared in this scope
+         map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(new_map);
+                                                                            ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘K keyed_queue<K, V>::k_iterator::operator*()’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:74:23: error: base operand of ‘->’ is not a pointer
+             return *(i->first.get());
+                       ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘keyed_queue<K, V>::k_iterator keyed_queue<K, V>::k_begin()’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:80:27: error: ‘map_of_iterators’ was not declared in this scope
+         return k_iterator(map_of_iterators->begin());
+                           ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘keyed_queue<K, V>::k_iterator keyed_queue<K, V>::k_end()’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:84:27: error: ‘map_of_iterators’ was not declared in this scope
+         return k_iterator(map_of_iterators->end());
+                           ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In constructor ‘keyed_queue<K, V>::keyed_queue()’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:88:9: error: ‘list_of_pairs’ was not declared in this scope
+         list_of_pairs = std::make_shared<std::list<pairKV>>(std::list<pairKV>{});
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:88:25: error: ‘make_shared’ is not a member of ‘std’
+         list_of_pairs = std::make_shared<std::list<pairKV>>(std::list<pairKV>{});
+                         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:88:52: error: ‘pairKV’ was not declared in this scope
+         list_of_pairs = std::make_shared<std::list<pairKV>>(std::list<pairKV>{});
+                                                    ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:88:77: error: type/value mismatch at argument 1 in template parameter list for ‘template<class _Tp, class _Alloc> class std::__cxx11::list’
+         list_of_pairs = std::make_shared<std::list<pairKV>>(std::list<pairKV>{});
+                                                                             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:88:77: note:   expected a type, got ‘pairKV’
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:88:77: error: template argument 2 is invalid
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:88:78: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+         list_of_pairs = std::make_shared<std::list<pairKV>>(std::list<pairKV>{});
+                                                                              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:88:80: error: template argument 1 is invalid
+         list_of_pairs = std::make_shared<std::list<pairKV>>(std::list<pairKV>{});
+                                                                                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:88:80: error: template argument 2 is invalid
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:89:9: error: ‘map_of_iterators’ was not declared in this scope
+         map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(map_key_to_list_of_occurances{});
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:89:28: error: ‘make_shared’ is not a member of ‘std’
+         map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(map_key_to_list_of_occurances{});
+                            ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:89:45: error: ‘map_key_to_list_of_occurances’ was not declared in this scope
+         map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(map_key_to_list_of_occurances{});
+                                             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:89:105: error: expected ‘)’ before ‘{’ token
+         map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(map_key_to_list_of_occurances{});
+                                                                                                         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:89:107: error: expected ‘;’ before ‘)’ token
+         map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(map_key_to_list_of_occurances{});
+                                                                                                           ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In copy constructor ‘keyed_queue<K, V>::keyed_queue(const keyed_queue<K, V>&)’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:95:9: error: ‘list_of_pairs’ was not declared in this scope
+         list_of_pairs = old_queue.list_of_pairs;
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:96:9: error: ‘map_of_iterators’ was not declared in this scope
+         map_of_iterators = old_queue.map_of_iterators;
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘void keyed_queue<K, V>::push(const K&, const V&)’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:107:9: error: ‘shared_ptr’ is not a member of ‘std’
+         std::shared_ptr<K> k_ptr = std::make_shared<K>(k);//
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:107:26: error: expected primary-expression before ‘>’ token
+         std::shared_ptr<K> k_ptr = std::make_shared<K>(k);//
+                          ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:107:28: error: ‘k_ptr’ was not declared in this scope
+         std::shared_ptr<K> k_ptr = std::make_shared<K>(k);//
+                            ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:107:36: error: ‘make_shared’ is not a member of ‘std’
+         std::shared_ptr<K> k_ptr = std::make_shared<K>(k);//
+                                    ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:107:54: error: expected primary-expression before ‘>’ token
+         std::shared_ptr<K> k_ptr = std::make_shared<K>(k);//
+                                                      ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:109:14: error: ‘map_ptr’ does not name a type
+         auto map_ptr = map_of_iterators;
+              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:110:14: error: ‘list_ptr’ does not name a type
+         auto list_ptr = list_of_pairs;
+              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:112:12: error: ‘map_of_iterators’ was not declared in this scope
+         if(map_of_iterators.unique() == false){
+            ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:116:13: error: ‘map_ptr’ was not declared in this scope
+             map_ptr = new_queue.map_of_iterators;
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:117:13: error: ‘list_ptr’ was not declared in this scope
+             list_ptr = new_queue.list_of_pairs;
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:120:14: error: ‘found’ does not name a type
+         auto found = (map_ptr)->find(k_ptr);//
+              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:122:9: error: ‘shared_ptr’ is not a member of ‘std’
+         std::shared_ptr<V> v_ptr = std::make_shared<V>(v);//
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:122:26: error: expected primary-expression before ‘>’ token
+         std::shared_ptr<V> v_ptr = std::make_shared<V>(v);//
+                          ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:122:28: error: ‘v_ptr’ was not declared in this scope
+         std::shared_ptr<V> v_ptr = std::make_shared<V>(v);//
+                            ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:122:36: error: ‘make_shared’ is not a member of ‘std’
+         std::shared_ptr<V> v_ptr = std::make_shared<V>(v);//
+                                    ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:122:54: error: expected primary-expression before ‘>’ token
+         std::shared_ptr<V> v_ptr = std::make_shared<V>(v);//
+                                                      ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:123:12: error: ‘found’ was not declared in this scope
+         if(found == (map_ptr)->end()){//
+            ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:123:22: error: ‘map_ptr’ was not declared in this scope
+         if(found == (map_ptr)->end()){//
+                      ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:124:21: error: ‘make_shared’ is not a member of ‘std’
+             k_ptr = std::make_shared<K>(k);//
+                     ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:124:39: error: expected primary-expression before ‘>’ token
+             k_ptr = std::make_shared<K>(k);//
+                                       ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:129:19: error: ‘pairKV’ was not declared in this scope
+         std::list<pairKV> singleton({std::make_pair(k_ptr,v_ptr)});//
+                   ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:129:25: error: template argument 1 is invalid
+         std::list<pairKV> singleton({std::make_pair(k_ptr,v_ptr)});//
+                         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:129:25: error: template argument 2 is invalid
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:129:37: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+         std::list<pairKV> singleton({std::make_pair(k_ptr,v_ptr)});//
+                                     ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:131:13: error: ‘found’ was not declared in this scope
+         if (found == (map_ptr)->end()) {
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:131:23: error: ‘map_ptr’ was not declared in this scope
+         if (found == (map_ptr)->end()) {
+                       ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:132:18: error: ‘ret’ does not name a type
+             auto ret = (map_ptr)->insert(std::make_pair(k_ptr, list_of_itarator{}));//
+                  ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:132:82: error: expected primary-expression before ‘)’ token
+             auto ret = (map_ptr)->insert(std::make_pair(k_ptr, list_of_itarator{}));//
+                                                                                  ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:133:16: error: ‘ret’ was not declared in this scope
+             if(ret.second == true){
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:141:13: error: ‘map_of_iterators’ was not declared in this scope
+             map_of_iterators = map_ptr;
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:141:32: error: ‘map_ptr’ was not declared in this scope
+             map_of_iterators = map_ptr;
+                                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:142:13: error: ‘list_of_pairs’ was not declared in this scope
+             list_of_pairs = list_ptr;
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:142:29: error: ‘list_ptr’ was not declared in this scope
+             list_of_pairs = list_ptr;
+                             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:144:10: error: ‘list_of_pairs’ was not declared in this scope
+         (list_of_pairs)->splice(list_of_pairs->end(),singleton);
+          ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:146:10: error: ‘found’ was not declared in this scope
+         (found->second).push_back(--(list_of_pairs->end()));
+          ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘void keyed_queue<K, V>::pop()’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:153:9: error: ‘pairKV’ was not declared in this scope
+         pairKV p = list_of_pairs.front();
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:155:9: error: ‘map_of_iterators’ was not declared in this scope
+         map_of_iterators[*(p.first)].
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:155:28: error: ‘p’ was not declared in this scope
+         map_of_iterators[*(p.first)].
+                            ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:158:9: error: ‘list_of_pairs’ was not declared in this scope
+         list_of_pairs.pop_front();
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘void keyed_queue<K, V>::pop(const K&)’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:166:14: error: ‘found’ does not name a type
+         auto found = map_of_iterators.find(k);
+              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:167:13: error: ‘found’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:167:22: error: ‘map_of_iterators’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+                      ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:171:9: error: ‘itKV’ was not declared in this scope
+         itKV it = found->second.front();
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:173:9: error: ‘list_of_pairs’ was not declared in this scope
+         list_of_pairs.erase(it);
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:173:29: error: ‘it’ was not declared in this scope
+         list_of_pairs.erase(it);
+                             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:175:9: error: ‘found’ was not declared in this scope
+         found->second.erase(found->second.begin());
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:178:13: error: ‘map_of_iterators’ was not declared in this scope
+             map_of_iterators.erase(k);
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘void keyed_queue<K, V>::move_to_back(const K&)’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:183:14: error: ‘found’ does not name a type
+         auto found = map_of_iterators.find(k);
+              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:184:13: error: ‘found’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:184:22: error: ‘map_of_iterators’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+                      ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:188:9: error: ‘list_of_itarator’ was not declared in this scope
+         list_of_itarator l = found->second;
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:189:42: error: ‘l’ was not declared in this scope
+         int number_of_elements_to_move = l.size();
+                                          ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:192:13: error: ‘itKV’ was not declared in this scope
+             itKV it = l.front();
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:193:13: error: ‘list_of_pairs’ was not declared in this scope
+             list_of_pairs.push_back(*it);
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:193:38: error: ‘it’ was not declared in this scope
+             list_of_pairs.push_back(*it);
+                                      ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:199:9: error: ‘found’ was not declared in this scope
+         found->second = l;
+         ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘std::pair<const K&, V&> keyed_queue<K, V>::front()’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:206:24: error: ‘list_of_pairs’ was not declared in this scope
+         K const &key = list_of_pairs.front().first;
+                        ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:208:16: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+         return {key, val};
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘std::pair<const K&, V&> keyed_queue<K, V>::back()’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:215:24: error: ‘list_of_pairs’ was not declared in this scope
+         K const &key = list_of_pairs.back().first;
+                        ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:217:16: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+         return {key, val};
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘std::pair<const K&, const V&> keyed_queue<K, V>::front() const’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:224:24: error: ‘list_of_pairs’ was not declared in this scope
+         K const &key = list_of_pairs.front().first;
+                        ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:226:16: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+         return {key, val};
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘std::pair<const K&, const V&> keyed_queue<K, V>::back() const’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:233:24: error: ‘list_of_pairs’ was not declared in this scope
+         K const &key = list_of_pairs.back().first;
+                        ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:235:16: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+         return {key, val};
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘std::pair<const K&, V&> keyed_queue<K, V>::first(const K&)’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:239:14: error: ‘found’ does not name a type
+         auto found = map_of_iterators.find(key);
+              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:240:13: error: ‘found’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:240:22: error: ‘map_of_iterators’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+                      ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:243:18: error: ‘found’ was not declared in this scope
+         V &val = found->second.front()->second;
+                  ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:244:16: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+         return {key, val};
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘std::pair<const K&, V&> keyed_queue<K, V>::last(const K&)’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:248:14: error: ‘found’ does not name a type
+         auto found = map_of_iterators.find(key);
+              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:249:13: error: ‘found’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:249:22: error: ‘map_of_iterators’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+                      ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:252:18: error: ‘found’ was not declared in this scope
+         V &val = found->second.back()->second;
+                  ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:253:16: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+         return {key, val};
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘std::pair<const K&, const V&> keyed_queue<K, V>::first(const K&) const’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:257:14: error: ‘found’ does not name a type
+         auto found = map_of_iterators.find(key);
+              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:258:13: error: ‘found’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:258:22: error: ‘map_of_iterators’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+                      ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:261:24: error: ‘found’ was not declared in this scope
+         V const &val = found->second.front()->second;
+                        ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:262:16: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+         return {key, val};
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘std::pair<const K&, const V&> keyed_queue<K, V>::last(const K&) const’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:266:14: error: ‘found’ does not name a type
+         auto found = map_of_iterators.find(key);
+              ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:267:13: error: ‘found’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:267:22: error: ‘map_of_iterators’ was not declared in this scope
+         if (found == map_of_iterators.end()) {
+                      ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:270:24: error: ‘found’ was not declared in this scope
+         V const &val = found->second.back()->second;
+                        ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:271:16: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
+         return {key, val};
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘size_t keyed_queue<K, V>::size() const’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:275:16: error: ‘list_of_pairs’ was not declared in this scope
+         return list_of_pairs.get()->size();
+                ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h: In member function ‘size_t keyed_queue<K, V>::count(const K&) const’:
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:287:13: error: ‘map_of_iterators’ was not declared in this scope
+         if (map_of_iterators.find(k) == map_of_iterators.end()) {
+             ^
+/home/szymon/Desktop/Studia 17 18/JNP/jnp-zadanie5/keyed_queue.h:290:16: error: ‘map_of_iterators’ was not declared in this scope
+         return map_of_iterators[k].size();
+                ^

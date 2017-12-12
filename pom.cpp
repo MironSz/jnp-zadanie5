@@ -10,9 +10,10 @@ int main() {
   kolejka.push(200, 1);
   kolejka.push(200, 2);
   kolejka.push(100, 2);
-  cout << kolejka.first(200).first << " " << kolejka.first(200).second << "\n";
 //  kolejka.pop(200);
+  kolejka.pop();
   kolejka.pop(200);
+  kolejka.pop(100);
 //  kolejka.pop(2);
   cout <<" * z maina\n";
   kolejka.push(100, 3);
@@ -21,6 +22,10 @@ int main() {
   for(auto b = kolejka.k_begin(); b != kolejka.k_end(); ++b)
     cout << *b << " | ";
   cout << "\n";
+  cout << kolejka.front().second << "\n";
+  cout << kolejka.back().second << "\n";
+  cout << kolejka.first(100).second << "\n";
+  cout << kolejka.last(200).second << "\n";
 //  cout<<"kopiujemy\n";
 //  auto kolejka2(kolejka);
 //  kolejka.push(3,1);
