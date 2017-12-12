@@ -20,7 +20,7 @@ private:
 
     struct cmp {
         bool operator() (std::shared_ptr<K> k1, std::shared_ptr<K> k2) {
-            return *k1.get() < *k2.get();
+            return *k1 < *k2;
         }
     };
 
@@ -117,12 +117,12 @@ public:
             list_ptr = new_queue.list_of_pairs;
         }
 
-        auto found = map_ptr->find(k_ptr);//
+        auto found = map_ptr->find(k_ptr);//founs jest para (key,list<iterator>)
         std::shared_ptr<V> v_ptr = std::make_shared<V>(v);//
 
-        if(found != map_ptr->end()){//
+        if(found != map_ptr->end()){//Jesli znalezlismy w mapie dany klucz
             k_ptr = found->first;
-            std::cout << "znal " << *k_ptr << " " << *(++found->second.front())->second << "\n";
+//            std::cout << "znal " << *k_ptr << " " << *(found->second.front())->second << "\n";
         }
 
         std::list<pairKV> singleton({std::make_pair(k_ptr,v_ptr)});//
@@ -132,12 +132,18 @@ public:
             auto ret = (map_ptr)->insert(std::make_pair(k_ptr, list_of_itarator{}));//JEdyna funnkcja ktora moze wywalic i modyfikuje
             if(ret.second == true){
                 std::cout<<"jest\n";
-
                 found = ret.first;
-                std::cout << *found -> first << " " << *(found->second.front()->second) << "koniec\n";
             } else{
                 //TODO
             }
+        } else{
+            for(auto i:*list_of_pairs){
+                std::cout<<"("<<*i.first<<","<<*i.second<<") ";
+            }
+            std::cout<<"\n";
+            //              dodawane key i val      znalezione key         znaleziony klucz iteratora       znaleziony val iterator
+                std::cout << k<<" "<<v<<" |  " << *found -> first << " "
+                          <<  *(found->second.front()->first)<<"  "<<*(found->second.front()->second) << "             koniec\n";
         }
 
         if(was_unique){
@@ -150,16 +156,16 @@ public:
         auto help=list_of_pairs->end();
         --help;
         (found->second).push_back(help);
-        std::cout << "Z tego klucza\n";
-        for(auto i : found->second) {
-            std::cout << *i->first << " " << *i->second << "**\n";
-            auto b = i;
-            ++b;
-            if(b != list_of_pairs->end()) {
-                std::cout<<"**\n";
-                std::cout << *b->first << " " << *b->second << "<-nastepny\n";
-            }
-        }
+//        std::cout << "Z tego klucza\n";
+//        for(auto i : found->second) {
+//            std::cout << *i->first << " " << *i->second << "**\n";
+//            auto b = i;
+//            ++b;
+//            if(b != list_of_pairs->end()) {
+//                std::cout<<"**\n";
+//                std::cout << *b->first << " " << *b->second << "<-nastepny\n";
+//            }
+//        }
     }
 
     void pop() {

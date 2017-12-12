@@ -6,12 +6,12 @@ int main() {
   map<int, int> m;
   keyed_queue<int, int> kolejka = {};
   cout << kolejka.size() << "\n";
-  kolejka.push(14, 3);
-  kolejka.push(2, 2);
-  kolejka.push(14, 6);
-  kolejka.push(2, 1);
-  cout << kolejka.first(14).first << " " << kolejka.first(14).second << "\n";
-  kolejka.pop(2);
+  kolejka.push(100, 1);
+  kolejka.push(200, 1);
+  kolejka.push(200, 2);
+  kolejka.push(100, 2);
+  cout << kolejka.first(200).first << " " << kolejka.first(200).second << "\n";
+  kolejka.pop(200);
 //  kolejka.pop(2);
   cout <<" * z maina\n";
   kolejka.push(14, 10);
