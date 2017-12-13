@@ -34,7 +34,24 @@ private:
     std::shared_ptr <map_key_to_list_of_occurances> map_of_iterators;
 
     void full_copy() {
-        auto new_list = std::list<pairKV>(*list_of_pairs);
+        std::cout<<"FULL COPY____________\n";
+        std::cout << map_of_iterators<<"\n";
+
+        auto i = list_of_pairs->begin();
+        while (i != list_of_pairs->end()) {
+            std::cout << *i->first << " " << *i->second << " | " ;
+            ++i;
+        }
+        std::cout << "\n";
+
+        i = list_of_pairs->begin();
+        while (i != list_of_pairs->end()) {
+            std::cout << i->first << " " << i->second << " | " ;
+            ++i;
+        }
+        std::cout << "\n\n";
+
+        auto new_list = *list_of_pairs;
 
         map_key_to_list_of_occurances new_map;
 
@@ -47,6 +64,21 @@ private:
         //TODO napisz najpierw stworzenie shared_ptr potem przypisz
         list_of_pairs = std::make_shared < std::list < pairKV >> (new_list);
         map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(new_map);
+
+        i = list_of_pairs->begin();
+        std::cout << map_of_iterators<<"\n";
+        while (i != list_of_pairs->end()) {
+            std::cout << *i->first << " " << *i->second << " | " ;
+            ++i;
+        }
+        std::cout << "\n";
+
+        i = list_of_pairs->begin();
+        while (i != list_of_pairs->end()) {
+            std::cout << i->first << " " << i->second << " | " ;
+            ++i;
+        }
+        std::cout << "\n\n\n\n";
     }
 
     class k_iterator {
@@ -96,7 +128,7 @@ public:
         keyed_queue new_queue;
         new_queue.list_of_pairs = old_queue.list_of_pairs;
         new_queue.map_of_iterators = old_queue.map_of_iterators;
-        std::cout <<"Nowa kopia count:" <<old_queue.list_of_pairs.use_count()<<"\n";
+        std::cout << "Nowa kopia count:" << old_queue.list_of_pairs.use_count() << "\n";
         //TODO licznik
         if (shallow_copy_enable == false) {
             std::cout << "w srdku\n";
@@ -113,9 +145,11 @@ public:
     void push(K const &k, V const &v) {
         std::shared_ptr <K> k_ptr = std::make_shared<K>(k);//
         std::cout << "push: " << k << " " << v << "\n";
+
         auto map_ptr = map_of_iterators;
         auto list_ptr = list_of_pairs;
         bool wasnt_unique = false;
+
         if (map_of_iterators.use_count() > 2) {
             wasnt_unique = true;
             keyed_queue<K, V> new_queue(*this);
@@ -124,19 +158,19 @@ public:
             list_ptr = new_queue.list_of_pairs;
         }
 
-        auto found = map_ptr->find(k_ptr);//founs jest para (key,list<iterator>)
-        std::shared_ptr <V> v_ptr = std::make_shared<V>(v);//
+        auto found = map_ptr->find(k_ptr);
+        std::shared_ptr <V> v_ptr = std::make_shared<V>(v);
 
-        if (found != map_ptr->end()) {//Jesli znalezlismy w mapie dany klucz
+        if (found != map_ptr->end()) {
             k_ptr = found->first;
         }
 
-        std::list <pairKV> singleton({std::make_pair(k_ptr, v_ptr)});//
-        std::list<itKV> singletonIt({singleton.begin()});//
+        std::list <pairKV> singleton({std::make_pair(k_ptr, v_ptr)});
+        std::list <itKV> singletonIt({singleton.begin()});
 
         if (found == (map_ptr)->end()) {
             auto ret = (map_ptr)->insert(
-                    std::make_pair(k_ptr, list_of_iterators{}));//JEdyna funnkcja ktora moze wywalic i modyfikuje
+                    std::make_pair(k_ptr, list_of_iterators{}));
             if (ret.second == true) {
                 found = ret.first;
             } else {
@@ -149,14 +183,15 @@ public:
             list_of_pairs = list_ptr;
         }
 
-        list_of_pairs->splice(list_of_pairs->end(),singleton);
-        found->second.splice((found->second).end(),singletonIt);
-//        auto it = list_of_pairs->begin();
-//        while(it != list_of_pairs->end()) {
-//            std::cout << *it->first << " " << *it->second << " | ";
-//            ++it;
-//        }
-//        std::cout << "\n";
+        list_of_pairs->splice(list_of_pairs->end(), singleton);
+        found->second.splice((found->second).end(), singletonIt);
+
+        auto i = list_of_pairs->begin();
+        while (i != list_of_pairs->end()) {
+            std::cout << *i->first << " " << *i->second << " | ";
+            ++i;
+        }
+        std::cout << "\n";
     }
 
     void pop() {
@@ -167,10 +202,12 @@ public:
     }
 
     void pop(K const &k) {
+        std::cout << "POP: " << k << "\n";
         auto k_ptr = std::make_shared<K>(k);
         auto map_ptr = map_of_iterators;
         auto list_ptr = list_of_pairs;
         bool wasnt_unique = false;
+
         if (map_of_iterators.use_count() > 2) {
             wasnt_unique = true;
             keyed_queue<K, V> new_queue(*this);
@@ -184,24 +221,21 @@ public:
             throw lookup_error();
         }
 
-        if(wasnt_unique) {
+        if (wasnt_unique) {
             map_of_iterators = map_ptr;
             list_of_pairs = list_ptr;
         }
 
         itKV it = found->second.front();
-        ++it;
-        std::cout << *it->first << " " << *it->second << "\n";
         list_of_pairs->erase(it);
-        std::cout << "*\n";
         found->second.erase(found->second.begin());
 
         if (found->second.empty()) {//TODO upewnic sie, ze nie rzuca
             map_of_iterators->erase(k_ptr);
         }
-        std::cout << "POP: " << k << "\n";
+
         auto i = list_of_pairs->begin();
-        while(i != list_of_pairs->end()) {
+        while (i != list_of_pairs->end()) {
             std::cout << *i->first << " " << *i->second << " | ";
             ++i;
         }
@@ -209,36 +243,46 @@ public:
     }
 
     void move_to_back(K const &k) {
+        std::cout << "MOVE TO BACK: " << k << "\n";
+
         auto k_ptr = std::make_shared<K>(k);
         auto found = map_of_iterators->find(k_ptr);
+
         if (found == map_of_iterators->end()) {
             throw lookup_error();
         }
 
-        std::list<pairKV> new_list_of_pairs;
-        std::list<itKV> new_list_of_iterators;
+        std::list <pairKV> new_list_of_pairs;
+        std::list <itKV> new_list_of_iterators;
 
-        for(auto i = found->second.begin(); i!=found->second.end(); ++i) {
+        for (auto i = found->second.begin(); i != found->second.end(); ++i) {
             new_list_of_pairs.push_back(**i);
         }
 
-        for(auto i = new_list_of_pairs.begin(); i!=new_list_of_pairs.end(); ++i){
+        for (auto i = new_list_of_pairs.begin(); i != new_list_of_pairs.end(); ++i) {
             new_list_of_iterators.push_back(i);
         }
-//        if(should_copy){}
-        auto new_queue = *this;
-        new_queue.full_copy();
+        std::cout << "MOve to back, use_count " << map_of_iterators.use_count() << "\n";
+        if (map_of_iterators.unique() == false) {
+            keyed_queue<K, V> new_queue(*this);
+            new_queue.full_copy();
+            found = new_queue.map_of_iterators->find(k_ptr);
+            map_of_iterators = new_queue.map_of_iterators;
+            list_of_pairs = new_queue.list_of_pairs;
+
+            found = map_of_iterators->find(k_ptr);
+        }
 //Od teraz no-throw
-        while(found->second.empty() == false) {
+        while (found->second.empty() == false) {
+            std::cout<<"usuwam "<< *found->second.front()->first <<"  "<<*found->second.front()->second<<"\n";
             list_of_pairs->erase(found->second.front());
             found->second.pop_front();
         }
-
-        list_of_pairs->splice(list_of_pairs->end(),new_list_of_pairs);
-        found->second.splice(found->second.end(),new_list_of_iterators);
-        std::cout << "MOVE TO BACK: " << k << "\n";
+        std::cout<<"rozmiar dodawanego splicem:"<<new_list_of_pairs.size()<<"\n";
+        list_of_pairs->splice(list_of_pairs->end(), new_list_of_pairs);
+        swap(found->second, new_list_of_iterators);
         auto it = list_of_pairs->begin();
-        while(it != list_of_pairs->end()) {
+        while (it != list_of_pairs->end()) {
             std::cout << *it->first << " " << *it->second << " | ";
             ++it;
         }

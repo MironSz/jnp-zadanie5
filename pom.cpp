@@ -11,12 +11,16 @@ int main() {
         kolejka.push(200, 1);
         kolejka.push(200, 2);
         kolejka.push(100, 2);
-//        kolejka.move_to_back(200);
+        keyed_queue<int, int> kolejka1(kolejka);
+        kolejka.move_to_back(200);
+        kolejka1.push(123, 123);
+        kolejka.push(1, 1);
+        kolejka1.push(12, 12);
 //        kolejka.pop();
 //        kolejka.pop(200);
 //        kolejka.pop(100);
         cout << " * z maina\n";
-        keyed_queue kolejka1(kolejka);
+//        keyed_queue kolejka1(kolejka);
 
 //        kolejka1.push(200, 3);
 //        kolejka.move_to_back(200);
@@ -28,10 +32,10 @@ int main() {
 //            cout << *b << " | ";
 
         cout << "\n Teraz back\n";
-        kolejka1.pop();
-        kolejka.pop(200);
+        kolejka.pop();
+//        kolejka.pop(200);
         cout << kolejka.front().first << "\n";
-        cout << kolejka1.front().first << "\n";
+//        cout << kolejka1.front().first << "\n";
 
 //  cout<<"kopiujemy\n";
 //  auto kolejka2(kolejka);
