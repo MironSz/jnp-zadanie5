@@ -2,3 +2,10 @@
 - clear
 - trzeba dopisać destruktor
 - Musimy jeszcze trzymać info o tym na które vwydaliśmy referencje (do głębokiego kopiowania)
+
+Pytanie
+-validate iteratorow
+-auto???
+-czy nasze rozwiazanie z wpoldzieleniem jest ok?
+-Czy trzeba komentowac
+-Czy Typy ogarnac?
