@@ -1,9 +1,14 @@
 #include <iostream>
 #include <map>
 #include "keyed_queue.h"
+#include <tuple>
+
 using namespace std;
 int main() {
     {
+
+
+
         map<int, int> m;
         keyed_queue<int, int> kolejka = {};
         cout << kolejka.size() << "\n";
@@ -15,15 +20,9 @@ int main() {
         // kolejka.move_to_back(200);
         // kolejka1.push(123, 123);
         // kolejka.push(1, 1);
-        kolejka1.push(300, 3);
-        kolejka1.push(1, 1);
-        kolejka.push(12, 321);
-        keyed_queue<int, int> kolejka2(kolejka);
-        kolejka2.push(1000, 1000);
-        // kolejka1.push(12, 12);
-//        kolejka.pop();
-//        kolejka.pop(200);
-//        kolejka.pop(100);
+        kolejka.move_to_back(200);
+        kolejka1.pop();
+        kolejka.push(12, 123);
         cout << " * z maina\n";
 //        keyed_queue kolejka1(kolejka);
 

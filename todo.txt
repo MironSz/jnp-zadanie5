@@ -9,3 +9,9 @@ Pytanie
 -czy nasze rozwiazanie z wpoldzieleniem jest ok?
 -Czy trzeba komentowac
 -Czy Typy ogarnac?
+
+
+
+
+- ustawiamy shallow_copy_enable na false
+- musimy zmienić pointer w tym val

@@ -23,6 +23,8 @@ private:
         }
     };
 
+    // using tupleKV = std::tuple <std::shared_ptr<K>, std::shared_ptr<V>, bool>;
+
     using pairKV = std::pair <std::shared_ptr<K>, std::shared_ptr<V>>;
     using itKV = typename std::list<pairKV>::iterator;
     using list_of_iterators = std::list<itKV>;
@@ -34,71 +36,24 @@ private:
     std::shared_ptr <map_key_to_list_of_occurances> map_of_iterators;
 
     void full_copy() {
-        std::cout << "FULL COPY____________\n";
-        std::cout << map_of_iterators << "\n";
+        std::list < pairKV > empty_list;
+        std::shared_ptr <std::list<pairKV>> new_list = std::make_shared < std::list < pairKV >>(empty_list);
 
-        auto pom = map_of_iterators;
-
-        std::cout << "WARTOŚCI_________\n";
-        auto i = list_of_pairs->begin();
-        while (i != list_of_pairs->end()) {
-            std::cout << *i->first << " " << *i->second << " | " ;
-            ++i;
+        for(auto it = list_of_pairs->begin();it!=list_of_pairs->end();it++){
+            new_list->push_back(*it);
         }
-        std::cout << "WSKAŹNIKI_________\n";
-        i = list_of_pairs->begin();
-        while (i != list_of_pairs->end()) {
-            std::cout << i->first << " " << i->second << " | " ;
-            ++i;
-        }
-        std::cout << "\n\n";
-
-        auto new_list = *list_of_pairs;
-
         map_key_to_list_of_occurances new_map;
 
-        for (itKV it = new_list.begin(); it != new_list.end(); ++it) {
+        for (itKV it = new_list->begin(); it != new_list->end(); ++it) {
             if (new_map.find(it->first) == new_map.end()) {
                 new_map.insert(std::make_pair(it->first, list_of_iterators{}));
             }
             new_map[it->first].push_back(it);
         }
         //TODO napisz najpierw stworzenie shared_ptr potem przypisz
-        list_of_pairs = std::make_shared < std::list < pairKV >> (new_list);
-        map_of_iterators = std::make_shared<map_key_to_list_of_occurances>(new_map);
-
-        i = list_of_pairs->begin();
-        std::cout << map_of_iterators<<"\n";
-        std::cout << "WARTOŚCI_________\n";
-        i = list_of_pairs->begin();
-        while (i != list_of_pairs->end()) {
-            std::cout << *i->first << " " << *i->second << " | " ;
-            ++i;
-        }
-        std::cout << "WSKAŹNIKI_________\n";
-        i = list_of_pairs->begin();
-        while (i != list_of_pairs->end()) {
-            std::cout << i->first << " " << i->second << " | " ;
-            ++i;
-        }
-        std::cout << "\n\n";
-        auto akti = map_of_iterators->begin();
-        auto pomi = pom->begin();
-
-        while(akti != map_of_iterators->end()) {
-
-          auto i1 = akti->second.begin();
-          auto i2 = pomi->second.begin();
-          while(i1 != akti->second.end()) {
-            bool czy = *i1 == *i2;
-            std::cout << czy << "\n";
-            ++i1;
-            ++i2;
-          }
-          ++akti;
-          ++pomi;
-        }
-        std::cout << "\n\n";
+        auto help = std::make_shared<map_key_to_list_of_occurances>(new_map);
+        swap(list_of_pairs,new_list);
+        map_of_iterators = help;
     }
 
     class k_iterator {
@@ -315,6 +270,12 @@ public:
         if (empty()) {
             throw lookup_error();
         }
+
+        // shallow_copy_enable = false;
+        // std::shared_ptr<V> v_ptr;
+        // std::shared_ptr<K> new_k_ptr = std::make_shared<K>(k);
+
+
         K const &key = *list_of_pairs->front().first;
         V &val = *list_of_pairs->front().second;
         return {key, val};
@@ -352,6 +313,7 @@ public:
         if (found == map_of_iterators->end()) {
             throw lookup_error();
         }
+        shallow_copy_enable = false;
         V &val = *found->second.front()->second;
         return {key, val};
     };
@@ -361,6 +323,7 @@ public:
         if (found == map_of_iterators->end()) {
             throw lookup_error();
         }
+        shallow_copy_enable = false;
         V &val = *found->second.back()->second;
         return {key, val};
     };
