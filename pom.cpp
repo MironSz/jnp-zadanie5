@@ -12,10 +12,15 @@ int main() {
         kolejka.push(200, 2);
         kolejka.push(100, 2);
         keyed_queue<int, int> kolejka1(kolejka);
-        kolejka.move_to_back(200);
-        kolejka1.push(123, 123);
-        kolejka.push(1, 1);
-        kolejka1.push(12, 12);
+        // kolejka.move_to_back(200);
+        // kolejka1.push(123, 123);
+        // kolejka.push(1, 1);
+        kolejka1.push(300, 3);
+        kolejka1.push(1, 1);
+        kolejka.push(12, 321);
+        keyed_queue<int, int> kolejka2(kolejka);
+        kolejka2.push(1000, 1000);
+        // kolejka1.push(12, 12);
 //        kolejka.pop();
 //        kolejka.pop(200);
 //        kolejka.pop(100);
@@ -31,8 +36,7 @@ int main() {
 //        for (auto b = kolejka.k_begin(); b != kolejka.k_end(); ++b)
 //            cout << *b << " | ";
 
-        cout << "\n Teraz back\n";
-        kolejka.pop();
+        // kolejka.pop();
 //        kolejka.pop(200);
         cout << kolejka.front().first << "\n";
 //        cout << kolejka1.front().first << "\n";

@@ -34,16 +34,18 @@ private:
     std::shared_ptr <map_key_to_list_of_occurances> map_of_iterators;
 
     void full_copy() {
-        std::cout<<"FULL COPY____________\n";
-        std::cout << map_of_iterators<<"\n";
+        std::cout << "FULL COPY____________\n";
+        std::cout << map_of_iterators << "\n";
 
+        auto pom = map_of_iterators;
+
+        std::cout << "WARTOŚCI_________\n";
         auto i = list_of_pairs->begin();
         while (i != list_of_pairs->end()) {
             std::cout << *i->first << " " << *i->second << " | " ;
             ++i;
         }
-        std::cout << "\n";
-
+        std::cout << "WSKAŹNIKI_________\n";
         i = list_of_pairs->begin();
         while (i != list_of_pairs->end()) {
             std::cout << i->first << " " << i->second << " | " ;
@@ -67,18 +69,36 @@ private:
 
         i = list_of_pairs->begin();
         std::cout << map_of_iterators<<"\n";
+        std::cout << "WARTOŚCI_________\n";
+        i = list_of_pairs->begin();
         while (i != list_of_pairs->end()) {
             std::cout << *i->first << " " << *i->second << " | " ;
             ++i;
         }
-        std::cout << "\n";
-
+        std::cout << "WSKAŹNIKI_________\n";
         i = list_of_pairs->begin();
         while (i != list_of_pairs->end()) {
             std::cout << i->first << " " << i->second << " | " ;
             ++i;
         }
-        std::cout << "\n\n\n\n";
+        std::cout << "\n\n";
+        auto akti = map_of_iterators->begin();
+        auto pomi = pom->begin();
+
+        while(akti != map_of_iterators->end()) {
+
+          auto i1 = akti->second.begin();
+          auto i2 = pomi->second.begin();
+          while(i1 != akti->second.end()) {
+            bool czy = *i1 == *i2;
+            std::cout << czy << "\n";
+            ++i1;
+            ++i2;
+          }
+          ++akti;
+          ++pomi;
+        }
+        std::cout << "\n\n";
     }
 
     class k_iterator {
@@ -126,12 +146,13 @@ public:
 
     keyed_queue(keyed_queue const &old_queue) {
         keyed_queue new_queue;
+        std::cout << "\n\nW UZYCIU: " << old_queue.list_of_pairs.use_count()
+                  << ", " << old_queue.map_of_iterators.use_count() << "\n";
         new_queue.list_of_pairs = old_queue.list_of_pairs;
         new_queue.map_of_iterators = old_queue.map_of_iterators;
-        std::cout << "Nowa kopia count:" << old_queue.list_of_pairs.use_count() << "\n";
         //TODO licznik
         if (shallow_copy_enable == false) {
-            std::cout << "w srdku\n";
+            std::cout << "gleboka kopia\n";
             new_queue.full_copy();
         }
         list_of_pairs = new_queue.list_of_pairs;
@@ -143,6 +164,7 @@ public:
     keyed_queue(keyed_queue &&) = default;
 
     void push(K const &k, V const &v) {
+
         std::shared_ptr <K> k_ptr = std::make_shared<K>(k);//
         std::cout << "push: " << k << " " << v << "\n";
 
