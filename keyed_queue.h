@@ -270,7 +270,7 @@ public:
             map_of_iterators = new_queue.map_of_iterators;
             list_of_pairs = new_queue.list_of_pairs;
 
-            found = map_of_iterators->find(k_ptr);
+            found = map_of_iterators->find(k_ptr);//TODO usun
         }
 //Od teraz no-throw
         while (found->second.empty() == false) {
