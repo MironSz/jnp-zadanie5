@@ -53,12 +53,12 @@ private:
         }
         it->second = help;
     }
-    bool gave_reference(std::shared_ptr<V> v_ptr){
+    bool gave_reference(std::shared_ptr<V> v_ptr) const {
         return change_set.find(v_ptr)!=change_set.end();
     }
 
     //Function that copies resources of queue, so it doesn't share its resources.
-    void full_copy(keyed_queue<K,V> old_queue) {
+    void full_copy(const keyed_queue<K,V>  &old_queue) {
         std::list <pairKV> empty_list;
         std::shared_ptr <std::list<pairKV>>
                 new_list = std::make_shared < std::list < pairKV >> (empty_list);
@@ -67,13 +67,13 @@ private:
         for (auto it = list_of_pairs->begin(); it != list_of_pairs->end(); ++it) {
             //DODANE:
             auto found = change_set.find(it->second);
-            if (found != change_set.end()) {
+            if (old_queue.gave_reference(it->second)) {
                 new_list->push_back({it->first, std::make_shared<K>(*it->second)});
             } else {
                 new_list->push_back(*it);
             }
         }
-        change_set.clear();//TODO ??? KAdy ma wasny set, kiedy go czyscimy
+//        change_set.clear();//TODO ??? KAdy ma wasny set, kiedy go czyscimy
         map_key_to_list_of_occurances new_map;
         //Copying map shared_ptr<K> -> list_of_iterators
         for (itKV it = new_list->begin(); it != new_list->end(); ++it) {
@@ -136,8 +136,8 @@ public:
         //poprawka z shallow_copy_enable na old_queue.shallow_copy_enable
         if (old_queue.shallow_copy_enable == false) {
             //DODANE:
-            new_queue.change_set = old_queue.change_set;
-            new_queue.full_copy(*this);
+//            new_queue.change_set = old_queue.change_set;
+            new_queue.full_copy(old_queue);
         }
 
         list_of_pairs = new_queue.list_of_pairs;

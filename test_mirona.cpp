@@ -1,7 +1,7 @@
+#include<iostream>
 #include "keyed_queue1.h"
 #include <cassert>
 #include <vector>
-#include<iostream>
 
 auto f(keyed_queue<int, int> q)
 {
@@ -24,7 +24,6 @@ int main()
     kq3 = kq2;
 
     ref = 10;
-//    std::cout<<kq2.front().second  <<"\n\n";
     assert(kq1.front().second == 10);
     assert(kq2.front().second != 10);
 
