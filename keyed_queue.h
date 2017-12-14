@@ -96,18 +96,13 @@ public:
         list_of_pairs = new_list;
         map_of_iterators = new_map;
         shallow_copy_enable = true;
-        //TODO licznik
     }
 
     keyed_queue(keyed_queue const &old_queue) {
         keyed_queue new_queue;
-        std::cout << "\n\nW UZYCIU: " << old_queue.list_of_pairs.use_count()
-                  << ", " << old_queue.map_of_iterators.use_count() << "\n";
         new_queue.list_of_pairs = old_queue.list_of_pairs;
         new_queue.map_of_iterators = old_queue.map_of_iterators;
-        //TODO licznik
         if (shallow_copy_enable == false) {
-            std::cout << "gleboka kopia\n";
             new_queue.full_copy();
         }
         list_of_pairs = new_queue.list_of_pairs;
@@ -121,7 +116,6 @@ public:
     void push(K const &k, V const &v) {
 
         std::shared_ptr <K> k_ptr = std::make_shared<K>(k);//
-        std::cout << "push: " << k << " " << v << "\n";
 
         auto map_ptr = map_of_iterators;
         auto list_ptr = list_of_pairs;
@@ -150,8 +144,6 @@ public:
                     std::make_pair(k_ptr, list_of_iterators{}));
             if (ret.second == true) {
                 found = ret.first;
-            } else {
-                //TODO Czy insert moe rzucic wyjatek alokacji
             }
         }
 
@@ -162,13 +154,6 @@ public:
 
         list_of_pairs->splice(list_of_pairs->end(), singleton);
         found->second.splice((found->second).end(), singletonIt);
-
-        auto i = list_of_pairs->begin();
-        while (i != list_of_pairs->end()) {
-            std::cout << *i->first << " " << *i->second << " | ";
-            ++i;
-        }
-        std::cout << "\n";
     }
 
     void pop() {
@@ -179,7 +164,6 @@ public:
     }
 
     void pop(K const &k) {
-        std::cout << "POP: " << k << "\n";
         auto k_ptr = std::make_shared<K>(k);
         auto map_ptr = map_of_iterators;
         auto list_ptr = list_of_pairs;
@@ -210,18 +194,9 @@ public:
         if (found->second.empty()) {//TODO upewnic sie, ze nie rzuca
             map_of_iterators->erase(k_ptr);
         }
-
-        auto i = list_of_pairs->begin();
-        while (i != list_of_pairs->end()) {
-            std::cout << *i->first << " " << *i->second << " | ";
-            ++i;
-        }
-        std::cout << "\n";
     }
 
     void move_to_back(K const &k) {
-        std::cout << "MOVE TO BACK: " << k << "\n";
-
         auto k_ptr = std::make_shared<K>(k);
         auto found = map_of_iterators->find(k_ptr);
 
@@ -239,31 +214,24 @@ public:
         for (auto i = new_list_of_pairs.begin(); i != new_list_of_pairs.end(); ++i) {
             new_list_of_iterators.push_back(i);
         }
-        std::cout << "MOve to back, use_count " << map_of_iterators.use_count() << "\n";
+
         if (map_of_iterators.unique() == false) {
+            std::cout<<"JEstesmy kopia\n\n";
             keyed_queue<K, V> new_queue(*this);
             new_queue.full_copy();
             found = new_queue.map_of_iterators->find(k_ptr);
-            map_of_iterators = new_queue.map_of_iterators;
-            list_of_pairs = new_queue.list_of_pairs;
-
-            found = map_of_iterators->find(k_ptr);//TODO usun
+            swap(map_of_iterators , new_queue.map_of_iterators);
+            swap(list_of_pairs , new_queue.list_of_pairs);
+            found = map_of_iterators->find(k_ptr);
         }
 //Od teraz no-throw
         while (found->second.empty() == false) {
-            std::cout<<"usuwam "<< *found->second.front()->first <<"  "<<*found->second.front()->second<<"\n";
+            std::cout<<" Teraz usuwam\n\n";
             list_of_pairs->erase(found->second.front());
-            found->second.pop_front();
+            found->second.erase(found->second.begin());
         }
-        std::cout<<"rozmiar dodawanego splicem:"<<new_list_of_pairs.size()<<"\n";
         list_of_pairs->splice(list_of_pairs->end(), new_list_of_pairs);
         swap(found->second, new_list_of_iterators);
-        auto it = list_of_pairs->begin();
-        while (it != list_of_pairs->end()) {
-            std::cout << *it->first << " " << *it->second << " | ";
-            ++it;
-        }
-        std::cout << "\n";
     }
 
     std::pair<K const &, V &> front() {

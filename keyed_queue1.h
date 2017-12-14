@@ -18,12 +18,11 @@ template<class K, class V>
 class keyed_queue {
 private:
 
-    //Attribute remembers if queue gave any reference.
+    //Attribute remembers if queue gave any non-const reference.
     bool shallow_copy_enable = true;
     //Set of 'given' values.
-    std::set<std::shared_ptr<V>> change_set;
-
-    //{shard pointer on key, shared pointer on value}
+    std::set <std::shared_ptr<V>> change_set;
+    //{shared pointer on key, shared pointer on value}
     using pairKV = std::pair <std::shared_ptr<K>, std::shared_ptr<V>>;
     using itKV = typename std::list<pairKV>::iterator;
     std::shared_ptr <std::list<pairKV>> list_of_pairs;
@@ -42,47 +41,50 @@ private:
     //DODANA: funkcja pomocnicza do oddawania referencji
     //rozumiem, ze w metodach gdie jest V const & nie ma sensu tego robić
     void change_single(itKV it) {
-      std::cout << "CHANGE:\n";
-      shallow_copy_enable= false;
-      // std::cout << "change single: " << it->second.use_count() << "\n";
-      if(list_of_pairs.unique() == false) {
-          //zmiana tego:
-          // full_copy();
+        std::cout << "CHANGE:\n";
+        shallow_copy_enable = false;
+        auto help = std::make_shared<K>(*it->second);
+        // std::cout << "change single: " << it->second.use_count() << "\n";
+        if (list_of_pairs.unique() == false) {
+            //zmiana tego:
+            // full_copy();
 
-          //na:
-          //z takich powodów, że teraz full_copy by wyczyściło nam change_set
-          auto new_queue = keyed_queue(*this);
-          this->map_of_iterators = new_queue.map_of_iterators;
-          this->list_of_pairs = new_queue.list_of_pairs;
-      }
-      it->second = std::make_shared<K>(*it->second);
-      change_set.insert(it->second);
+            //na:
+            //z takich powodów, że teraz full_copy by wyczyściło nam change_set
+            auto new_queue = keyed_queue(*this);
+            change_set.insert(help);
+            this->map_of_iterators = new_queue.map_of_iterators;
+            this->list_of_pairs = new_queue.list_of_pairs;
+        } else {
+            change_set.insert(help);
+        }
+        it->second = help;
     }
 
     //Function that copies resources of queue, so it doesn't share its resources.
     void full_copy() {
-      std::cout << "PELNA KOPIA\n";
-        std::list < pairKV > empty_list;
+        std::cout << "PELNA KOPIA\n";
+        std::list <pairKV> empty_list;
         std::shared_ptr <std::list<pairKV>>
-            new_list = std::make_shared < std::list < pairKV >>(empty_list);
+                new_list = std::make_shared < std::list < pairKV >> (empty_list);
 
         //Copying list_of_pairs
-        for(auto it = list_of_pairs->begin();it!=list_of_pairs->end();++it){
+        for (auto it = list_of_pairs->begin(); it != list_of_pairs->end(); ++it) {
             //new_list->push_back(*it);
 
             //DODANE:
             auto found = change_set.find(it->second);
-            if(found != change_set.end()) {
+            if (found != change_set.end()) {
                 // std::cout << it->second << " ";
                 new_list->push_back({it->first, std::make_shared<K>(*it->second)});
                 // std::cout << (--new_list->end())->second << " " << *it->second << "\n";
+            } else {
+                new_list->push_back(*it);
             }
-            else
-              new_list->push_back(*it);
         }
 
         //DODANE
-        change_set.clear();
+        change_set.clear();//TODO ??? KAdy ma wasny set, kiedy go czyscimy
 
         map_key_to_list_of_occurances new_map;
 
@@ -93,9 +95,8 @@ private:
             }
             new_map[it->first].push_back(it);
         }
-        //TODO napisz najpierw stworzenie shared_ptr potem przypisz
         auto help = std::make_shared<map_key_to_list_of_occurances>(new_map);
-        swap(list_of_pairs,new_list);
+        swap(list_of_pairs, new_list);
         map_of_iterators = help;
     }
 
@@ -125,19 +126,19 @@ private:
 
 public:
 
-  void print_queue() {
-      auto i = list_of_pairs->begin();
-      while (i != list_of_pairs->end()) {
-          std::cout << *i->first << " " << *i->second << " | ";
-          ++i;
-      }
-      std::cout << "\n";
-  }
+    void print_queue() {//TODO usun
+        auto i = list_of_pairs->begin();
+        while (i != list_of_pairs->end()) {
+            std::cout << *i->first << " " << *i->second << " | ";
+            ++i;
+        }
+        std::cout << "\n";
+    }
 
-    void pom() {
-      auto it = --list_of_pairs->end();
-      std::cout << "POM: ";
-      std::cout << it->second << " " << *it->second << "\n";
+    void pom() {//TODO usun
+        auto it = --list_of_pairs->end();
+        std::cout << "POM: ";
+        std::cout << it->second << " " << *it->second << "\n";
     }
 
     k_iterator k_begin() {
@@ -154,28 +155,27 @@ public:
         list_of_pairs = new_list;
         map_of_iterators = new_map;
         shallow_copy_enable = true;
-        //TODO licznik
     }
 
     keyed_queue(keyed_queue const &old_queue) {
         keyed_queue new_queue;
         new_queue.list_of_pairs = old_queue.list_of_pairs;
         new_queue.map_of_iterators = old_queue.map_of_iterators;
-
-
-        //TODO licznik
         //poprawka z shallow_copy_enable na old_queue.shallow_copy_enable
         if (old_queue.shallow_copy_enable == false) {
             //DODANE:
             new_queue.change_set = old_queue.change_set;
             new_queue.full_copy();
         }
+
         list_of_pairs = new_queue.list_of_pairs;
         map_of_iterators = new_queue.map_of_iterators;
         shallow_copy_enable = true;
     }
 
-    keyed_queue(keyed_queue &&) = default;
+    keyed_queue(keyed_queue &&):map_of_iterators(std::move(this->map_of_iterators)),
+                                list_of_pairs(std::move(this->list_of_pairs)),
+                                change_set(std::move(this->change_set)),shallow_copy_enable(shallow_copy_enable){};
 
     void push(K const &k, V const &v) {
         std::cout << "PUSH: " << k << " " << v << "\n";
@@ -208,11 +208,8 @@ public:
         if (found == (map_ptr)->end()) {
             auto ret = (map_ptr)->insert(
                     std::make_pair(k_ptr, list_of_iterators{}));
-            if (ret.second == true) {
-                found = ret.first;
-            } else {
-                //TODO Czy insert moe rzucic wyjatek alokacji
-            }
+            found = ret.first;
+
         }
 
         if (wasnt_unique) {
@@ -299,13 +296,12 @@ public:
         if (map_of_iterators.unique() == false) {
             keyed_queue<K, V> new_queue(*this);
             new_queue.full_copy();
+            //This is last operation that may throw an exception.
+            //It is also the first one that modifies anythng.
             found = new_queue.map_of_iterators->find(k_ptr);
             map_of_iterators = new_queue.map_of_iterators;
             list_of_pairs = new_queue.list_of_pairs;
-
-            found = map_of_iterators->find(k_ptr);//TODO usun
         }
-//Od teraz no-throw
         //Erasing elements from list and map.
         while (found->second.empty() == false) {
             // std::cout<<"usuwam "<< *found->second.front()->first <<"  "<<*found->second.front()->second<<"\n";
@@ -326,7 +322,7 @@ public:
 
         change_single(list_of_pairs->begin());
 
-        K const &key = *list_of_pairs->front().first;
+        K const &key = *list_of_pairs->front().first;//Te linie mog rzucac TODO
         V &val = *list_of_pairs->front().second;
         return {key, val};
     };
@@ -335,7 +331,9 @@ public:
         if (empty()) {
             throw lookup_error();
         }
+
         change_single(--list_of_pairs->end());
+
         K const &key = *list_of_pairs->back().first;
         V &val = *list_of_pairs->back().second;
         return {key, val};
@@ -415,7 +413,7 @@ public:
     }
 
     void clear() {
-
+        *this = keyed_queue<K,V>();
     }
 
     size_t count(K const &k) const {
