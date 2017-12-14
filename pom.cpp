@@ -2,11 +2,16 @@
 #include <map>
 #include "keyed_queue1.h"
 #include <tuple>
+#include <cassert>
 
 using namespace std;
-int main() {
-    {
 
+auto f(keyed_queue<int, int> q)
+{
+  return q;
+}
+
+int main() {
 
         map<int, int> m;
         keyed_queue<int, int> kolejka = {};
@@ -17,21 +22,26 @@ int main() {
         kolejka.push(100, 2);
 
 
-        keyed_queue<int, int> kolejka1(kolejka);
-
-        auto back = kolejka.back();
+        // keyed_queue<int, int> kolejka1 = kolejka;
         auto front = kolejka.front();
+        keyed_queue<int, int> kolejka1(kolejka);
+        auto back = kolejka.back();
+        front.second = 100000;
+        back.second = 111111;
         auto first = kolejka.first(200);
         auto last = kolejka.last(200);
-        back.second = 100000;
-        front.second = 100000;
         first.second = 100000;
-        last.second = 100000;
-        kolejka.push(13, 12);
-        kolejka1.push(13, 12);
-        kolejka.move_to_back(200);
-        kolejka1.move_to_back(100);
-        cout << " * z maina\n";
+        last.second = 1111111;
+        kolejka.push(200, 3);
+        kolejka1.push(200, 3);
+
+
+
+
+        // kolejka.push(13, 12);
+        // kolejka1.push(13, 12);
+        // kolejka.move_to_back(200);
+        // kolejka1.move_to_back(100);
 
 
 
@@ -73,6 +83,6 @@ int main() {
         //
         // kolejka.last(2).second = 15;
         // cout << kolejka.back().second << "\n";
-    }
+
 
 }

@@ -1,17 +1,7 @@
-- Dorobić współdzielenie pamięci między kolejkami (pamiętać wtedy o zmianach w pop, push itd)
+Zostało:
+- na naszych kolejkach nie działa std::swap
+- dodanie operacji na change_set w pop
+- zastanowienie się czy nie trzeba czegoś związanego z setem zrobić w move_to_back
+  (mi się wydaje, że raczej nie)
 - clear
-- trzeba dopisać destruktor
-- Musimy jeszcze trzymać info o tym na które vwydaliśmy referencje (do głębokiego kopiowania)
-
-Pytanie
--validate iteratorow
--auto???
--czy nasze rozwiazanie z wpoldzieleniem jest ok?
--Czy trzeba komentowac
--Czy Typy ogarnac?
-
-
-
-
-- ustawiamy shallow_copy_enable na false
-- musimy zmienić pointer w tym val
+- musimy zdefiniować operator = w queue (test nie przechodzi)
