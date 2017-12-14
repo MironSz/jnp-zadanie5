@@ -21,9 +21,9 @@ int main() {
     kolejka.push(100, 2);
 
 
-    // keyed_queue<int, int> kolejka1 = kolejka;
+     keyed_queue<int, int> kolejka1 = kolejka;
     auto front = kolejka.front();
-    keyed_queue<int, int> kolejka1(kolejka);
+//    keyed_queue<int, int> kolejka1(kolejka);
     swap(kolejka,kolejka1);
     auto back = kolejka.back();
     front.second = 100000;
