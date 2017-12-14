@@ -94,11 +94,11 @@ private:
 
 public:
 
-    k_iterator k_begin() noexcept {
+    k_iterator k_begin() const noexcept {
         return k_iterator(map_of_iterators->begin());
     }
 
-    k_iterator k_end() noexcept {
+    k_iterator k_end() const noexcept {
         return k_iterator(map_of_iterators->end());
     }
 
@@ -343,11 +343,11 @@ public:
         return {key, val};
     };
 
-    size_t size() const {
+    size_t size() const noexcept{
         return list_of_pairs->size();
     }
 
-    bool empty() const {
+    bool empty() const noexcept{
         return size() == 0;
     }
 
