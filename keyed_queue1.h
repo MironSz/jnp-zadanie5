@@ -48,9 +48,8 @@ private:
                 new_list = std::make_shared < std::list < pairKV >> (empty_list);
         //Copying list_of_pairs
         for (auto it = list_of_pairs->begin(); it != list_of_pairs->end(); ++it) {
-            auto found = change_set.find(it->second);
             if (old_queue.gave_reference(it->second)) {
-                new_list->push_back({it->first, std::make_shared<K>(*it->second)});
+                new_list->push_back({it->first, std::make_shared<V>(*it->second)});
             } else {
                 new_list->push_back(*it);
             }
@@ -88,18 +87,18 @@ private:
             return i != k.i;
         }
 
-        K operator*() {
+        V operator*() {
             return *(i->first.get());
         }
     };
 
 public:
 
-    k_iterator k_begin() const{
+    k_iterator k_begin() noexcept {
         return k_iterator(map_of_iterators->begin());
     }
 
-    k_iterator k_end() const{
+    k_iterator k_end() noexcept {
         return k_iterator(map_of_iterators->end());
     }
 
@@ -277,9 +276,7 @@ public:
         if (empty()) {
             throw lookup_error();
         }
-
         change_single(--list_of_pairs->end());
-
         K const &key = *list_of_pairs->back().first;
         V &val = *list_of_pairs->back().second;
         return {key, val};
@@ -309,10 +306,8 @@ public:
         if (found == map_of_iterators->end()) {
             throw lookup_error();
         }
-
         change_single(found->second.front());
         found = map_of_iterators->find(k_ptr);
-
         K const &k = *found->second.front()->first;
         V &val = *found->second.front()->second;
         return {k, val};
@@ -324,10 +319,8 @@ public:
         if (found == map_of_iterators->end()) {
             throw lookup_error();
         }
-
         change_single(found->second.back());
         found = map_of_iterators->find(k_ptr);
-
         V &val = *found->second.back()->second;
         return {key, val};
     };
