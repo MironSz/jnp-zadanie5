@@ -1,5 +1,5 @@
-#ifndef JNP_ZADANIE5_KEYED_QUEUE_H
-#define JNP_ZADANIE5_KEYED_QUEUE_H
+#ifndef JNP_ZADANIE5_KEYED_QUEUE1_H
+#define JNP_ZADANIE5_KEYED_QUEUE1_H
 
 #include <stdlib.h>
 #include <utility>
@@ -17,25 +17,56 @@ class lookup_error : public std::exception {
 template<class K, class V>
 class keyed_queue {
 private:
-    struct cmp {
-        bool operator()(std::shared_ptr <K> k1, std::shared_ptr <K> k2) {
-            return *k1 < *k2;
-        }
-    };
-
 
     using pairKV = std::pair <std::shared_ptr<K>, std::shared_ptr<V>>;
     using itKV = typename std::list<pairKV>::iterator;
     using list_of_iterators = std::list<itKV>;
-    using map_key_to_list_of_occurances  = std::map <std::shared_ptr<K>, list_of_iterators, cmp>;
 
+    struct cmp_map {
+        bool operator()(const std::shared_ptr <K> k1, const std::shared_ptr <K> k2) const {
+            return *k1 < *k2;
+        }
+    };
+    struct cmp_set {
+        bool operator()(const itKV it1, const itKV it2) const {
+            if(*it1->first == *it2->first)
+                return *it1->second < *it2->second;
+            return *it1->first < *it2->first;
+        }
+    };
+
+    using map_key_to_list_of_occurances  = std::map <std::shared_ptr<K>, list_of_iterators, cmp_map>;
 
     bool shallow_copy_enable = true;
+
+    //std::shared_ptr<std::set<itKV, cmp_set>> change_set;
+    std::set<itKV, cmp_set> change_set;
 
     std::shared_ptr <std::list<pairKV>> list_of_pairs;
     std::shared_ptr <map_key_to_list_of_occurances> map_of_iterators;
 
+    //dodana funkcja pomocnicza do oddawania referencji
+    //rozumiem, ze w metodach gdie jest V const & nie ma sensu tego robić
+    void change_single(itKV it) {
+      shallow_copy_enable= false;
+      std::cout << "change single: " << it->second.use_count() << "\n";
+      if(list_of_pairs.unique() == false)
+          full_copy();
+      std::shared_ptr<K> k_ptr = it->first;
+      std::shared_ptr<V> v_ptr = it->second;
+      *it = {std::make_shared<K>(*k_ptr), std::make_shared<V>(*v_ptr)};
+
+      //change_set->insert(it);
+      change_set.insert(it);
+
+      // for(auto i = change_set.begin(); i != change_set.end(); ++i)
+      //     std::cout << *(*i)->first << " " << *(*i)->second. << " | ";
+      // std::cout << "\n";
+    }
+
+
     void full_copy() {
+      std::cout << "PELNA KOPIA\n";
         std::list < pairKV > empty_list;
         std::shared_ptr <std::list<pairKV>> new_list = std::make_shared < std::list < pairKV >>(empty_list);
 
@@ -101,13 +132,13 @@ public:
 
     keyed_queue(keyed_queue const &old_queue) {
         keyed_queue new_queue;
-        std::cout << "\n\nW UZYCIU: " << old_queue.list_of_pairs.use_count()
+        std::cout << "W UZYCIU: " << old_queue.list_of_pairs.use_count()
                   << ", " << old_queue.map_of_iterators.use_count() << "\n";
         new_queue.list_of_pairs = old_queue.list_of_pairs;
         new_queue.map_of_iterators = old_queue.map_of_iterators;
         //TODO licznik
-        if (shallow_copy_enable == false) {
-            std::cout << "gleboka kopia\n";
+        //poprawka z shallow_copy_enable na old_queue.shallow_copy_enable
+        if (old_queue.shallow_copy_enable == false) {
             new_queue.full_copy();
         }
         list_of_pairs = new_queue.list_of_pairs;
@@ -179,6 +210,10 @@ public:
     }
 
     void pop(K const &k) {
+
+        //DO DOPISANIA: usuwanie z change_set
+
+
         std::cout << "POP: " << k << "\n";
         auto k_ptr = std::make_shared<K>(k);
         auto map_ptr = map_of_iterators;
@@ -186,6 +221,7 @@ public:
         bool wasnt_unique = false;
 
         if (map_of_iterators.use_count() > 2) {
+            std::cout << "Bedziemy kopiowac\n";
             wasnt_unique = true;
             keyed_queue<K, V> new_queue(*this);
             new_queue.full_copy();//TODO moze byc podwojna kopia
@@ -271,10 +307,7 @@ public:
             throw lookup_error();
         }
 
-        // shallow_copy_enable = false;
-        // std::shared_ptr<V> v_ptr;
-        // std::shared_ptr<K> new_k_ptr = std::make_shared<K>(k);
-
+        change_single(list_of_pairs->begin());
 
         K const &key = *list_of_pairs->front().first;
         V &val = *list_of_pairs->front().second;
@@ -285,6 +318,9 @@ public:
         if (empty()) {
             throw lookup_error();
         }
+
+        change_single(--list_of_pairs->end());
+
         K const &key = *list_of_pairs->back().first;
         V &val = *list_of_pairs->back().second;
         return {key, val};
@@ -309,21 +345,31 @@ public:
     };
 
     std::pair<K const &, V &> first(K const &key) {
-        auto found = map_of_iterators->find(std::make_shared<K>(key));
+        auto k_ptr = std::make_shared<K>(key);
+        auto found = map_of_iterators->find(k_ptr);
         if (found == map_of_iterators->end()) {
             throw lookup_error();
         }
-        shallow_copy_enable = false;
+
+        change_single(found->second.front());
+        found = map_of_iterators->find(k_ptr);
+
+        K const &k = *found->second.front()->first;
         V &val = *found->second.front()->second;
-        return {key, val};
+        return {k, val};
     };
 
     std::pair<K const &, V &> last(K const &key) {
-        auto found = map_of_iterators->find(std::make_shared<K>(key));
+        auto k_ptr = std::make_shared<K>(key);
+        auto found = map_of_iterators->find(k_ptr);
         if (found == map_of_iterators->end()) {
             throw lookup_error();
         }
-        shallow_copy_enable = false;
+
+        change_single(found->second.back());
+        found = map_of_iterators->find(k_ptr);
+
+        K const &k = *found->second.back()->first;
         V &val = *found->second.back()->second;
         return {key, val};
     };
@@ -366,4 +412,4 @@ public:
     }
 };
 
-#endif //JNP_ZADANIE5_KEYED_QUEUE_H
+#endif //JNP_ZADANIE5_KEYED_QUEUE1_H

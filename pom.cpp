@@ -1,12 +1,11 @@
 #include <iostream>
 #include <map>
-#include "keyed_queue.h"
+#include "keyed_queue1.h"
 #include <tuple>
 
 using namespace std;
 int main() {
     {
-
 
 
         map<int, int> m;
@@ -16,14 +15,26 @@ int main() {
         kolejka.push(200, 1);
         kolejka.push(200, 2);
         kolejka.push(100, 2);
+
+
         keyed_queue<int, int> kolejka1(kolejka);
-        // kolejka.move_to_back(200);
-        // kolejka1.push(123, 123);
-        // kolejka.push(1, 1);
+
+        auto back = kolejka.back();
+        auto front = kolejka.front();
+        auto first = kolejka.first(200);
+        auto last = kolejka.last(200);
+        back.second = 100000;
+        front.second = 100000;
+        first.second = 100000;
+        last.second = 100000;
+        kolejka.push(13, 12);
+        kolejka1.push(13, 12);
         kolejka.move_to_back(200);
-        kolejka1.pop();
-        kolejka.push(12, 123);
+        kolejka1.move_to_back(100);
         cout << " * z maina\n";
+
+
+
 //        keyed_queue kolejka1(kolejka);
 
 //        kolejka1.push(200, 3);
@@ -37,7 +48,6 @@ int main() {
 
         // kolejka.pop();
 //        kolejka.pop(200);
-        cout << kolejka.front().first << "\n";
 //        cout << kolejka1.front().first << "\n";
 
 //  cout<<"kopiujemy\n";
